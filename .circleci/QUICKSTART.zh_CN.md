@@ -31,8 +31,8 @@
 在项目的 `README.md` 中添加：
 
 ```markdown
-[![CircleCI](https://circleci.com/gh/qubit-ltd/common-rust.svg?style=svg)](https://circleci.com/gh/qubit-ltd/common-rust)
-[![Coverage Status](https://coveralls.io/repos/github/qubit-ltd/common-rust/badge.svg?branch=main)](https://coveralls.io/github/qubit-ltd/common-rust?branch=main)
+[![CircleCI](https://circleci.com/gh/qubit-ltd/rust-common.svg?style=svg)](https://circleci.com/gh/qubit-ltd/rust-common)
+[![Coverage Status](https://coveralls.io/repos/github/qubit-ltd/rust-common/badge.svg?branch=main)](https://coveralls.io/github/qubit-ltd/rust-common?branch=main)
 ```
 
 ### 4. 本地测试（3 分钟）
@@ -40,7 +40,7 @@
 在提交前运行本地检查：
 
 ```bash
-cd common-rust
+cd rust-common
 ./ci-check.sh
 ```
 
@@ -69,7 +69,7 @@ cd common-rust
 
 ```bash
 # 快速检查（推荐）
-cd common-rust
+cd rust-common
 ./ci-check.sh
 
 # 或分步检查
@@ -80,7 +80,7 @@ cargo test             # 运行测试
 
 ### 查看构建状态
 
-- 在线查看：https://app.circleci.com/pipelines/github/qubit-ltd/common-rust
+- 在线查看：https://app.circleci.com/pipelines/github/qubit-ltd/rust-common
 - PR 页面会显示检查状态
 - 失败时会收到邮件通知（如已配置）
 
@@ -162,8 +162,8 @@ git commit -m "docs: 更新文档 [ci skip]"
 ## 🔗 重要链接
 
 - 📖 [完整文档](README.zh_CN.md)
-- 🏠 [CircleCI 仪表板](https://app.circleci.com/pipelines/github/qubit-ltd/common-rust)
-- 📚 [项目文档](https://github.com/qubit-ltd/common-rust)
+- 🏠 [CircleCI 仪表板](https://app.circleci.com/pipelines/github/qubit-ltd/rust-common)
+- 📚 [项目文档](https://github.com/qubit-ltd/rust-common)
 
 ## 💡 最佳实践
 
@@ -176,8 +176,8 @@ git commit -m "docs: 更新文档 [ci skip]"
 ## 🆘 需要帮助？
 
 - 📧 starfish.hu@gmail.com
-- 🐛 [提交 Issue](https://github.com/qubit-ltd/common-rust/issues)
-- 💬 [讨论区](https://github.com/qubit-ltd/common-rust/discussions)
+- 🐛 [提交 Issue](https://github.com/qubit-ltd/rust-common/issues)
+- 💬 [讨论区](https://github.com/qubit-ltd/rust-common/discussions)
 
 ---
 

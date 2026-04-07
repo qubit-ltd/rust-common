@@ -21,9 +21,9 @@
 ### 2. ✅ Moved Configuration Location
 
 **From**: `/rust-common/.circleci/`
-**To**: `/rust-common/common-rust/.circleci/`
+**To**: `/rust-common/rust-common/.circleci/`
 
-**Reason**: Configuration is specific to the `common-rust` project, not the workspace root.
+**Reason**: Configuration is specific to the `rust-common` project, not the workspace root.
 
 ### 3. ✅ Internationalized All Content
 
@@ -50,7 +50,7 @@ All documents now have both English (default) and Chinese versions:
 - ❌ `/rust-common/CIRCLECI_SETUP.md` (moved to new location)
 
 **Kept**:
-- ✅ `/rust-common/common-rust/.circleci/` (new location)
+ - ✅ `/rust-common/rust-common/.circleci/` (new location)
 - ✅ All documentation files (English + Chinese)
 
 ### 5. ✅ Coverage Integration
@@ -64,7 +64,7 @@ All documents now have both English (default) and Chinese versions:
 ## 📁 Final File Structure
 
 ```
-common-rust/
+rust-common/
 ├── .circleci/
 │   ├── config.yml                # Main configuration (generic, English)
 │   ├── README.md                 # Full docs (English) ⭐
@@ -116,7 +116,7 @@ common-rust/
 
 ## 🚀 How to Use
 
-### For This Project (common-rust)
+### For This Project (rust-common)
 
 Configuration is ready to use:
 
@@ -132,10 +132,10 @@ Copy to another project:
 
 ```bash
 # Copy entire .circleci directory
-cp -r common-rust/.circleci /path/to/other-rust-project/
+cp -r rust-common/.circleci /path/to/other-rust-project/
 
 # Copy ci-check script
-cp common-rust/ci-check.sh /path/to/other-rust-project/
+cp rust-common/ci-check.sh /path/to/other-rust-project/
 
 # Done! No configuration changes needed
 ```
@@ -186,9 +186,9 @@ See:
 
 **Before**:
 ```yaml
-- cd common-rust
-- cargo build
-- checksum "common-rust/Cargo.lock"
+ - cd rust-common
+ - cargo build
+ - checksum "rust-common/Cargo.lock"
 ```
 
 **After**:

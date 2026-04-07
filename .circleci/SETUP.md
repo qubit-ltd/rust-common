@@ -9,7 +9,7 @@
 ### 1. CircleCI Configuration
 
 ```
-common-rust/
+rust-common/
 ├── .circleci/
 │   ├── config.yml                # Main CircleCI configuration (generic)
 │   ├── README.md                 # Full documentation (English)
@@ -202,8 +202,8 @@ If build is abnormally slow or failing:
 Need help?
 
 - 📧 Email: starfish.hu@gmail.com
-- 🐛 Issues: https://github.com/qubit-ltd/common-rust/issues
-- 💬 Discussions: https://github.com/qubit-ltd/common-rust/discussions
+- 🐛 Issues: https://github.com/qubit-ltd/rust-common/issues
+- 💬 Discussions: https://github.com/qubit-ltd/rust-common/discussions
 
 ## 🔗 Related Links
 

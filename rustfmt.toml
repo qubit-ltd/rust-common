@@ -1,4 +1,4 @@
-# Rustfmt configuration file for qubit-common (common-rust)
+# Rustfmt configuration file for qubit-common (rust-common)
 #
 # This configuration requires nightly Rust for imports formatting.
 # Use `cargo +nightly fmt` or run `./format.sh` to format code.

@@ -568,8 +568,8 @@ executors:
 For questions or suggestions:
 
 - 📧 Email: starfish.hu@gmail.com
-- 🐛 Issues: [GitHub Issues](https://github.com/qubit-ltd/common-rust/issues)
-- 💡 Discussions: [GitHub Discussions](https://github.com/qubit-ltd/common-rust/discussions)
+- 🐛 Issues: [GitHub Issues](https://github.com/qubit-ltd/rust-common/issues)
+- 💡 Discussions: [GitHub Discussions](https://github.com/qubit-ltd/rust-common/discussions)
 
 ---
 
