@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
- *    Copyright (c) 2025.
- *    3-Prism Co. Ltd.
+ *    Copyright (c) 2025 - 2026.
+ *    Haixing Hu, Qubit Co. Ltd.
  *
  *    All rights reserved.
  *
@@ -45,7 +45,7 @@ use super::error::{
 /// Basic usage (returns `ArgumentResult`):
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::{OptionArgument, ArgumentResult};
+/// use qubit_common::lang::argument::{OptionArgument, ArgumentResult};
 ///
 /// fn process_config(timeout: Option<u64>) -> ArgumentResult<()> {
 ///     let timeout = timeout.require_non_null("timeout")?;
@@ -57,7 +57,7 @@ use super::error::{
 /// Converting to other error types:
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::OptionArgument;
+/// use qubit_common::lang::argument::OptionArgument;
 ///
 /// fn process_config(timeout: Option<u64>) -> Result<(), String> {
 ///     let timeout = timeout
@@ -81,7 +81,7 @@ pub trait OptionArgument<T> {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::OptionArgument;
+    /// use qubit_common::lang::argument::OptionArgument;
     ///
     /// let value: Option<i32> = Some(42);
     /// assert_eq!(value.require_non_null("value").unwrap(), 42);
@@ -106,7 +106,7 @@ pub trait OptionArgument<T> {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::OptionArgument;
+    /// use qubit_common::lang::argument::OptionArgument;
     ///
     /// let age: Option<u8> = Some(25);
     /// let result = age.require_non_null_and(
@@ -139,7 +139,7 @@ pub trait OptionArgument<T> {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::OptionArgument;
+    /// use qubit_common::lang::argument::OptionArgument;
     ///
     /// let port: Option<u16> = Some(8080);
     /// let result = port.validate_if_present("port", |p| {
@@ -219,7 +219,7 @@ impl<T> OptionArgument<T> for Option<T> {
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::require_null_or;
+/// use qubit_common::lang::argument::require_null_or;
 ///
 /// let value: Option<i32> = Some(10);
 /// let result = require_null_or("value", value, |&v| v > 0, "Must be positive");

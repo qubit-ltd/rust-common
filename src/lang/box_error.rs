@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
- *    Copyright (c) 2025.
- *    3-Prism Co. Ltd.
+ *    Copyright (c) 2025 - 2026.
+ *    Haixing Hu, Qubit Co. Ltd.
  *
  *    All rights reserved.
  *
@@ -112,7 +112,7 @@ use std::error::Error;
 /// ## Example 1: Simplifying Function Signatures
 ///
 /// ```rust
-/// use prism3_core::BoxError;
+/// use qubit_common::BoxError;
 ///
 /// // Without BoxError (verbose and error-prone)
 /// fn operation_verbose() -> Result<String, Box<dyn std::error::Error + Send + Sync>> {
@@ -128,7 +128,7 @@ use std::error::Error;
 /// ## Example 2: Simplifying Struct Fields
 ///
 /// ```rust
-/// use prism3_core::BoxError;
+/// use qubit_common::BoxError;
 ///
 /// // Without BoxError
 /// struct TaskResult {
@@ -146,7 +146,7 @@ use std::error::Error;
 /// ## Example 3: Simplifying Closure Signatures
 ///
 /// ```rust
-/// use prism3_core::BoxError;
+/// use qubit_common::BoxError;
 ///
 /// // Without BoxError (complex generic constraint)
 /// fn execute_with_callback<F>(callback: F)
@@ -168,7 +168,7 @@ use std::error::Error;
 /// ## Example 4: Converting Concrete Errors to BoxError
 ///
 /// ```rust
-/// use prism3_core::BoxError;
+/// use qubit_common::BoxError;
 /// use std::io;
 ///
 /// fn read_file() -> Result<String, BoxError> {
@@ -223,7 +223,7 @@ pub type BoxError = Box<dyn Error + Send + Sync>;
 /// ## Example 1: Simplifying Function Return Types
 ///
 /// ```rust
-/// use prism3_core::BoxResult;
+/// use qubit_common::BoxResult;
 ///
 /// // Without BoxResult
 /// fn parse_config() -> Result<Config, Box<dyn std::error::Error + Send + Sync>> {
@@ -243,7 +243,7 @@ pub type BoxError = Box<dyn Error + Send + Sync>;
 /// ## Example 2: Using with the `?` Operator
 ///
 /// ```rust
-/// use prism3_core::BoxResult;
+/// use qubit_common::BoxResult;
 /// use std::fs;
 ///
 /// fn load_and_parse() -> BoxResult<String> {
@@ -256,7 +256,7 @@ pub type BoxError = Box<dyn Error + Send + Sync>;
 /// ## Example 3: Combining Multiple Error Types
 ///
 /// ```rust
-/// use prism3_core::BoxResult;
+/// use qubit_common::BoxResult;
 /// use std::{fs, io};
 ///
 /// fn process_file(path: &str) -> BoxResult<usize> {

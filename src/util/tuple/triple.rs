@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
- *    Copyright (c) 2025.
- *    3-Prism Co. Ltd.
+ *    Copyright (c) 2025 - 2026.
+ *    Haixing Hu, Qubit Co. Ltd.
  *
  *    All rights reserved.
  *
@@ -64,7 +64,7 @@ use std::fmt;
 /// # Examples
 ///
 /// ```
-/// use prism3_core::Triple;
+/// use qubit_common::Triple;
 ///
 /// let triple = Triple::new("name", 42, true);
 /// assert_eq!(triple.first, "name");
@@ -98,7 +98,7 @@ impl<F, S, T> Triple<F, S, T> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Triple;
+    /// use qubit_common::Triple;
     ///
     /// let triple = Triple::new(1, "hello", true);
     /// assert_eq!(triple.first, 1);
@@ -119,7 +119,7 @@ impl<F, S, T> Triple<F, S, T> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Triple;
+    /// use qubit_common::Triple;
     ///
     /// let triple = Triple::new(1, "hello", true);
     /// let (first, second, third) = triple.into_tuple();
@@ -137,7 +137,7 @@ impl<F, S, T> Triple<F, S, T> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Triple;
+    /// use qubit_common::Triple;
     ///
     /// let triple = Triple::new(1, 2, 3);
     /// assert_eq!(triple.first(), &1);
@@ -152,7 +152,7 @@ impl<F, S, T> Triple<F, S, T> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Triple;
+    /// use qubit_common::Triple;
     ///
     /// let triple = Triple::new(1, 2, 3);
     /// assert_eq!(triple.second(), &2);
@@ -167,7 +167,7 @@ impl<F, S, T> Triple<F, S, T> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Triple;
+    /// use qubit_common::Triple;
     ///
     /// let triple = Triple::new(1, 2, 3);
     /// assert_eq!(triple.third(), &3);
@@ -182,7 +182,7 @@ impl<F, S, T> Triple<F, S, T> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Triple;
+    /// use qubit_common::Triple;
     ///
     /// let mut triple = Triple::new(1, 2, 3);
     /// *triple.first_mut() = 10;
@@ -198,7 +198,7 @@ impl<F, S, T> Triple<F, S, T> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Triple;
+    /// use qubit_common::Triple;
     ///
     /// let mut triple = Triple::new(1, 2, 3);
     /// *triple.second_mut() = 20;
@@ -214,7 +214,7 @@ impl<F, S, T> Triple<F, S, T> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Triple;
+    /// use qubit_common::Triple;
     ///
     /// let mut triple = Triple::new(1, 2, 3);
     /// *triple.third_mut() = 30;
@@ -230,7 +230,7 @@ impl<F, S, T> Triple<F, S, T> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Triple;
+    /// use qubit_common::Triple;
     ///
     /// let triple = Triple::new(1, "hello", true);
     /// let mapped = triple.map_first(|x| x * 2);
@@ -255,7 +255,7 @@ impl<F, S, T> Triple<F, S, T> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Triple;
+    /// use qubit_common::Triple;
     ///
     /// let triple = Triple::new(1, "hello", true);
     /// let mapped = triple.map_second(|s| s.len());
@@ -280,7 +280,7 @@ impl<F, S, T> Triple<F, S, T> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Triple;
+    /// use qubit_common::Triple;
     ///
     /// let triple = Triple::new(1, "hello", true);
     /// let mapped = triple.map_third(|b| if b { "yes" } else { "no" });
@@ -307,7 +307,7 @@ impl<F, S, T> From<(F, S, T)> for Triple<F, S, T> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Triple;
+    /// use qubit_common::Triple;
     ///
     /// let triple: Triple<i32, &str, bool> = (1, "hello", true).into();
     /// assert_eq!(triple.first, 1);
@@ -330,7 +330,7 @@ impl<F, S, T> From<Triple<F, S, T>> for (F, S, T) {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Triple;
+    /// use qubit_common::Triple;
     ///
     /// let triple = Triple::new(1, "hello", true);
     /// let tuple: (i32, &str, bool) = triple.into();

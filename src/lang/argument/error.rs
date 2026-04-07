@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
- *    Copyright (c) 2025.
- *    3-Prism Co. Ltd.
+ *    Copyright (c) 2025 - 2026.
+ *    Haixing Hu, Qubit Co. Ltd.
  *
  *    All rights reserved.
  *
@@ -29,7 +29,7 @@ use std::fmt;
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::ArgumentError;
+/// use qubit_common::lang::argument::ArgumentError;
 ///
 /// let error = ArgumentError::new("Invalid argument");
 /// assert_eq!(error.message(), "Invalid argument");
@@ -54,7 +54,7 @@ impl ArgumentError {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::ArgumentError;
+    /// use qubit_common::lang::argument::ArgumentError;
     ///
     /// let error = ArgumentError::new("Value cannot be negative");
     /// ```
@@ -101,7 +101,7 @@ impl From<&str> for ArgumentError {
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::{ArgumentResult, ArgumentError};
+/// use qubit_common::lang::argument::{ArgumentResult, ArgumentError};
 ///
 /// fn validate_positive(value: i32) -> ArgumentResult<i32> {
 ///     if value > 0 {

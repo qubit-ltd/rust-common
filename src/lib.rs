@@ -1,12 +1,12 @@
 /*******************************************************************************
  *
- *    Copyright (c) 2025.
- *    3-Prism Co. Ltd.
+ *    Copyright (c) 2025 - 2026.
+ *    Haixing Hu, Qubit Co. Ltd.
  *
  *    All rights reserved.
  *
  ******************************************************************************/
-//! # Prism3 Core - Core Utility Library
+//! # Qubit Common - Core Utility Library
 //!
 //! Provides language-level fundamental tools and data type support, including:
 //! - Data type definitions and validation

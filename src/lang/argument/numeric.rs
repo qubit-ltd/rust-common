@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
- *    Copyright (c) 2025.
- *    3-Prism Co. Ltd.
+ *    Copyright (c) 2025 - 2026.
+ *    Haixing Hu, Qubit Co. Ltd.
  *
  *    All rights reserved.
  *
@@ -42,7 +42,7 @@ use std::fmt::Display;
 /// Basic usage (returns `ArgumentResult`):
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::{NumericArgument, ArgumentResult};
+/// use qubit_common::lang::argument::{NumericArgument, ArgumentResult};
 ///
 /// fn set_volume(volume: i32) -> ArgumentResult<()> {
 ///     let volume = volume.require_in_closed_range("volume", 0, 100)?;
@@ -54,7 +54,7 @@ use std::fmt::Display;
 /// Converting to other error types:
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::NumericArgument;
+/// use qubit_common::lang::argument::NumericArgument;
 ///
 /// fn set_volume(volume: i32) -> Result<(), String> {
 ///     let volume = volume
@@ -84,7 +84,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value: i32 = 0;
     /// assert!(value.require_zero("value").is_ok());
@@ -107,7 +107,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value: i32 = 10;
     /// assert!(value.require_non_zero("value").is_ok());
@@ -130,7 +130,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value: i32 = 10;
     /// assert!(value.require_positive("value").is_ok());
@@ -153,7 +153,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value: i32 = 0;
     /// assert!(value.require_non_negative("value").is_ok());
@@ -176,7 +176,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value: i32 = -5;
     /// assert!(value.require_negative("value").is_ok());
@@ -199,7 +199,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value: i32 = 0;
     /// assert!(value.require_non_positive("value").is_ok());
@@ -227,7 +227,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value = 50;
     /// assert!(value.require_in_closed_range("value", 0, 100).is_ok());
@@ -252,7 +252,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value = 50;
     /// assert!(value.require_in_open_range("value", 0, 100).is_ok());
@@ -277,7 +277,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value = 100;
     /// assert!(value.require_in_left_open_range("value", 0, 100).is_ok());
@@ -302,7 +302,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value = 0;
     /// assert!(value.require_in_right_open_range("value", 0, 100).is_ok());
@@ -326,7 +326,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value = 50;
     /// assert!(value.require_less("value", 100).is_ok());
@@ -350,7 +350,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value = 100;
     /// assert!(value.require_less_equal("value", 100).is_ok());
@@ -374,7 +374,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value = 50;
     /// assert!(value.require_greater("value", 0).is_ok());
@@ -398,7 +398,7 @@ pub trait NumericArgument: Sized {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::NumericArgument;
+    /// use qubit_common::lang::argument::NumericArgument;
     ///
     /// let value = 0;
     /// assert!(value.require_greater_equal("value", 0).is_ok());
@@ -565,7 +565,7 @@ where
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::require_equal;
+/// use qubit_common::lang::argument::require_equal;
 ///
 /// let result = require_equal("width", 100, "height", 100);
 /// assert!(result.is_ok());
@@ -602,7 +602,7 @@ where
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::require_not_equal;
+/// use qubit_common::lang::argument::require_not_equal;
 ///
 /// let result = require_not_equal("min", 0, "max", 100);
 /// assert!(result.is_ok());

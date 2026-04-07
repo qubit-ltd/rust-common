@@ -26,7 +26,7 @@ All member fields are `pub` (public) and can be accessed and modified directly.
 #### Examples
 
 ```rust
-use prism3_core::Pair;
+use qubit_common::Pair;
 
 // Create using the new method
 let pair1 = Pair::new("key", "value");
@@ -63,7 +63,7 @@ let pair3: Pair<i32, i32> = (1, 2).into();
 #### Examples
 
 ```rust
-use prism3_core::Triple;
+use qubit_common::Triple;
 
 // Create using the new method
 let triple1 = Triple::new("name", 42, true);
@@ -140,5 +140,5 @@ Haixing Hu
 
 ## Copyright
 
-Copyright (c) 2025. 3-Prism Co. Ltd. All rights reserved.
+Copyright (c) 2025 - 2026. Haixing Hu, Qubit Co. Ltd. All rights reserved.
 

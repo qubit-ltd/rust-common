@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
- *    Copyright (c) 2025.
- *    3-Prism Co. Ltd.
+ *    Copyright (c) 2025 - 2026.
+ *    Haixing Hu, Qubit Co. Ltd.
  *
  *    All rights reserved.
  *
@@ -41,7 +41,7 @@ use super::error::{
 /// Basic usage (returns `ArgumentResult`):
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::{CollectionArgument, ArgumentResult};
+/// use qubit_common::lang::argument::{CollectionArgument, ArgumentResult};
 ///
 /// fn process_items(items: &[String]) -> ArgumentResult<()> {
 ///     let items = items.require_non_empty("items")?;
@@ -53,7 +53,7 @@ use super::error::{
 /// Converting to other error types:
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::CollectionArgument;
+/// use qubit_common::lang::argument::CollectionArgument;
 ///
 /// fn process_items(items: &[String]) -> Result<(), String> {
 ///     let items = items
@@ -83,7 +83,7 @@ pub trait CollectionArgument {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::CollectionArgument;
+    /// use qubit_common::lang::argument::CollectionArgument;
     ///
     /// let items = vec![1, 2, 3];
     /// assert!(items.require_non_empty("items").is_ok());
@@ -107,7 +107,7 @@ pub trait CollectionArgument {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::CollectionArgument;
+    /// use qubit_common::lang::argument::CollectionArgument;
     ///
     /// let coordinates = vec![1, 2, 3];
     /// assert!(coordinates.require_length_be("coordinates", 3).is_ok());
@@ -128,7 +128,7 @@ pub trait CollectionArgument {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::CollectionArgument;
+    /// use qubit_common::lang::argument::CollectionArgument;
     ///
     /// let items = vec![1, 2, 3, 4, 5];
     /// assert!(items.require_length_at_least("items", 3).is_ok());
@@ -149,7 +149,7 @@ pub trait CollectionArgument {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::CollectionArgument;
+    /// use qubit_common::lang::argument::CollectionArgument;
     ///
     /// let items = vec![1, 2, 3];
     /// assert!(items.require_length_at_most("items", 10).is_ok());
@@ -171,7 +171,7 @@ pub trait CollectionArgument {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::CollectionArgument;
+    /// use qubit_common::lang::argument::CollectionArgument;
     ///
     /// let items = vec![1, 2, 3];
     /// assert!(items.require_length_in_range("items", 1, 10).is_ok());
@@ -322,7 +322,7 @@ impl<T> CollectionArgument for Vec<T> {
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::require_element_non_null;
+/// use qubit_common::lang::argument::require_element_non_null;
 ///
 /// let items = vec![Some(1), Some(2), Some(3)];
 /// assert!(require_element_non_null("items", &items).is_ok());

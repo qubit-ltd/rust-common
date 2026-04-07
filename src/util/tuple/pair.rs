@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
- *    Copyright (c) 2025.
- *    3-Prism Co. Ltd.
+ *    Copyright (c) 2025 - 2026.
+ *    Haixing Hu, Qubit Co. Ltd.
  *
  *    All rights reserved.
  *
@@ -13,7 +13,7 @@
 //! ## Examples
 //!
 //! ```
-//! use prism3_core::Pair;
+//! use qubit_common::Pair;
 //!
 //! // Compare readability
 //! let tuple = ("Alice", 30);
@@ -88,7 +88,7 @@ use std::fmt;
 /// # Examples
 ///
 /// ```
-/// use prism3_core::Pair;
+/// use qubit_common::Pair;
 ///
 /// let pair = Pair::new("name", 42);
 /// assert_eq!(pair.first, "name");
@@ -117,7 +117,7 @@ impl<F, S> Pair<F, S> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Pair;
+    /// use qubit_common::Pair;
     ///
     /// let pair = Pair::new(1, "hello");
     /// assert_eq!(pair.first, 1);
@@ -133,7 +133,7 @@ impl<F, S> Pair<F, S> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Pair;
+    /// use qubit_common::Pair;
     ///
     /// let pair = Pair::new(1, "hello");
     /// let (first, second) = pair.into_tuple();
@@ -150,7 +150,7 @@ impl<F, S> Pair<F, S> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Pair;
+    /// use qubit_common::Pair;
     ///
     /// let pair = Pair::new(1, 2);
     /// assert_eq!(pair.first(), &1);
@@ -165,7 +165,7 @@ impl<F, S> Pair<F, S> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Pair;
+    /// use qubit_common::Pair;
     ///
     /// let pair = Pair::new(1, 2);
     /// assert_eq!(pair.second(), &2);
@@ -180,7 +180,7 @@ impl<F, S> Pair<F, S> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Pair;
+    /// use qubit_common::Pair;
     ///
     /// let mut pair = Pair::new(1, 2);
     /// *pair.first_mut() = 10;
@@ -196,7 +196,7 @@ impl<F, S> Pair<F, S> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Pair;
+    /// use qubit_common::Pair;
     ///
     /// let mut pair = Pair::new(1, 2);
     /// *pair.second_mut() = 20;
@@ -212,7 +212,7 @@ impl<F, S> Pair<F, S> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Pair;
+    /// use qubit_common::Pair;
     ///
     /// let pair = Pair::new(1, "hello");
     /// let mapped = pair.map_first(|x| x * 2);
@@ -235,7 +235,7 @@ impl<F, S> Pair<F, S> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Pair;
+    /// use qubit_common::Pair;
     ///
     /// let pair = Pair::new(1, "hello");
     /// let mapped = pair.map_second(|s| s.len());
@@ -258,7 +258,7 @@ impl<F, S> Pair<F, S> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Pair;
+    /// use qubit_common::Pair;
     ///
     /// let pair = Pair::new(1, "hello");
     /// let swapped = pair.swap();
@@ -280,7 +280,7 @@ impl<F, S> From<(F, S)> for Pair<F, S> {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Pair;
+    /// use qubit_common::Pair;
     ///
     /// let pair: Pair<i32, &str> = (1, "hello").into();
     /// assert_eq!(pair.first, 1);
@@ -301,7 +301,7 @@ impl<F, S> From<Pair<F, S>> for (F, S) {
     /// # Examples
     ///
     /// ```
-    /// use prism3_core::Pair;
+    /// use qubit_common::Pair;
     ///
     /// let pair = Pair::new(1, "hello");
     /// let tuple: (i32, &str) = pair.into();

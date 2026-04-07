@@ -1,16 +1,16 @@
 [package]
-name = "prism3-core"
-version = "0.2.0"
+name = "qubit-common"
+version = "0.3.0"
 edition = "2021"
 rust-version = "1.70"
 authors = ["Haixing Hu <starfish.hu@gmail.com>"]
 license = "Apache-2.0"
-repository = "https://github.com/3-prism/prism3-rust-core"
+repository = "https://github.com/qubit-ltd/common-rust"
 description = "Foundational utilities and language-level tools for Rust application development"
-homepage = "https://github.com/3-prism/prism3-rust-core"
-documentation = "https://docs.rs/prism3-core"
+homepage = "https://github.com/qubit-ltd/common-rust"
+documentation = "https://docs.rs/qubit-common"
 readme = "README.md"
-keywords = ["utility", "validation", "argument", "datatype", "prism3"]
+keywords = ["utility", "validation", "argument", "datatype", "qubit"]
 categories = ["development-tools", "rust-patterns"]
 exclude = [
     "coverage.sh",
@@ -23,7 +23,7 @@ exclude = [
 ]
 
 [lib]
-name = "prism3_core"
+name = "qubit_common"
 doctest = false
 
 [dependencies]

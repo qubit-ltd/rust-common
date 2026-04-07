@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
- *    Copyright (c) 2025.
- *    3-Prism Co. Ltd.
+ *    Copyright (c) 2025 - 2026.
+ *    Haixing Hu, Qubit Co. Ltd.
  *
  *    All rights reserved.
  *
@@ -14,7 +14,7 @@
 //!
 //! Haixing Hu
 
-use prism3_core::DataType;
+use qubit_common::DataType;
 
 /// Test DataType::as_str method for all data types
 #[test]

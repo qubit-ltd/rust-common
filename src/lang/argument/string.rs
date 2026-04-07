@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
- *    Copyright (c) 2025.
- *    3-Prism Co. Ltd.
+ *    Copyright (c) 2025 - 2026.
+ *    Haixing Hu, Qubit Co. Ltd.
  *
  *    All rights reserved.
  *
@@ -46,7 +46,7 @@ use regex::Regex;
 /// Basic usage (returns `ArgumentResult`):
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::{StringArgument, ArgumentResult};
+/// use qubit_common::lang::argument::{StringArgument, ArgumentResult};
 ///
 /// fn set_username(username: &str) -> ArgumentResult<()> {
 ///     let username = username
@@ -60,7 +60,7 @@ use regex::Regex;
 /// Converting to other error types:
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::StringArgument;
+/// use qubit_common::lang::argument::StringArgument;
 ///
 /// fn set_username(username: &str) -> Result<(), String> {
 ///     let username = username
@@ -87,7 +87,7 @@ pub trait StringArgument {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::StringArgument;
+    /// use qubit_common::lang::argument::StringArgument;
     ///
     /// let text = "hello";
     /// assert!(text.require_non_blank("text").is_ok());
@@ -111,7 +111,7 @@ pub trait StringArgument {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::StringArgument;
+    /// use qubit_common::lang::argument::StringArgument;
     ///
     /// let code = "ABC12";
     /// assert!(code.require_length_be("code", 5).is_ok());
@@ -135,7 +135,7 @@ pub trait StringArgument {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::StringArgument;
+    /// use qubit_common::lang::argument::StringArgument;
     ///
     /// let password = "secret123";
     /// assert!(password.require_length_at_least("password", 8).is_ok());
@@ -156,7 +156,7 @@ pub trait StringArgument {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::StringArgument;
+    /// use qubit_common::lang::argument::StringArgument;
     ///
     /// let description = "Short text";
     /// assert!(description.require_length_at_most("description", 100).is_ok());
@@ -178,7 +178,7 @@ pub trait StringArgument {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::StringArgument;
+    /// use qubit_common::lang::argument::StringArgument;
     ///
     /// let username = "alice";
     /// assert!(username.require_length_in_range("username", 3, 20).is_ok());
@@ -204,7 +204,7 @@ pub trait StringArgument {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::StringArgument;
+    /// use qubit_common::lang::argument::StringArgument;
     /// use regex::Regex;
     ///
     /// let email = "user@example.com";
@@ -227,7 +227,7 @@ pub trait StringArgument {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::argument::StringArgument;
+    /// use qubit_common::lang::argument::StringArgument;
     /// use regex::Regex;
     ///
     /// let text = "hello world";

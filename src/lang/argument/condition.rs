@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
- *    Copyright (c) 2025.
- *    3-Prism Co. Ltd.
+ *    Copyright (c) 2025 - 2026.
+ *    Haixing Hu, Qubit Co. Ltd.
  *
  *    All rights reserved.
  *
@@ -34,7 +34,7 @@ use super::error::{
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::check_argument;
+/// use qubit_common::lang::argument::check_argument;
 ///
 /// let age = 25;
 /// assert!(check_argument(age >= 18).is_ok());
@@ -66,7 +66,7 @@ pub fn check_argument(condition: bool) -> ArgumentResult<()> {
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::check_argument_with_message;
+/// use qubit_common::lang::argument::check_argument_with_message;
 ///
 /// let count = 5;
 /// let result = check_argument_with_message(
@@ -102,7 +102,7 @@ pub fn check_argument_with_message(condition: bool, message: &str) -> ArgumentRe
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::check_argument_fmt;
+/// use qubit_common::lang::argument::check_argument_fmt;
 ///
 /// let value = 150;
 /// let max = 100;
@@ -139,7 +139,7 @@ pub fn check_argument_fmt(condition: bool, message: String) -> ArgumentResult<()
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::check_state;
+/// use qubit_common::lang::argument::check_state;
 ///
 /// let is_initialized = true;
 /// assert!(check_state(is_initialized).is_ok());
@@ -170,7 +170,7 @@ pub fn check_state(condition: bool) -> ArgumentResult<()> {
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::check_state_with_message;
+/// use qubit_common::lang::argument::check_state_with_message;
 ///
 /// let is_connected = false;
 /// let result = check_state_with_message(
@@ -208,7 +208,7 @@ pub fn check_state_with_message(condition: bool, message: &str) -> ArgumentResul
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::check_bounds;
+/// use qubit_common::lang::argument::check_bounds;
 ///
 /// let buffer_len = 100;
 /// assert!(check_bounds(10, 20, buffer_len).is_ok());
@@ -251,7 +251,7 @@ pub fn check_bounds(offset: usize, length: usize, total_length: usize) -> Argume
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::check_element_index;
+/// use qubit_common::lang::argument::check_element_index;
 ///
 /// let list_size = 10;
 /// assert_eq!(check_element_index(5, list_size).unwrap(), 5);
@@ -288,7 +288,7 @@ pub fn check_element_index(index: usize, size: usize) -> ArgumentResult<usize> {
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::check_position_index;
+/// use qubit_common::lang::argument::check_position_index;
 ///
 /// let list_size = 10;
 /// assert_eq!(check_position_index(10, list_size).unwrap(), 10); // Can equal size
@@ -324,7 +324,7 @@ pub fn check_position_index(index: usize, size: usize) -> ArgumentResult<usize> 
 /// # Examples
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::argument::check_position_indexes;
+/// use qubit_common::lang::argument::check_position_indexes;
 ///
 /// let list_size = 10;
 /// assert!(check_position_indexes(2, 5, list_size).is_ok());

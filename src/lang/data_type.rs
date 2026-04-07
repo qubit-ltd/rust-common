@@ -1,7 +1,7 @@
 /*******************************************************************************
  *
- *    Copyright (c) 2025.
- *    3-Prism Co. Ltd.
+ *    Copyright (c) 2025 - 2026.
+ *    Haixing Hu, Qubit Co. Ltd.
  *
  *    All rights reserved.
  *
@@ -58,7 +58,7 @@ use serde::{
 /// ## Basic Usage
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::DataType;
+/// use qubit_common::lang::DataType;
 ///
 /// let data_type = DataType::Int32;
 /// assert_eq!(data_type.to_string(), "int32");
@@ -68,7 +68,7 @@ use serde::{
 /// ## Type Checking
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::DataType;
+/// use qubit_common::lang::DataType;
 ///
 /// fn is_numeric(data_type: DataType) -> bool {
 ///     matches!(data_type,
@@ -85,7 +85,7 @@ use serde::{
 /// ## Serialization
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::DataType;
+/// use qubit_common::lang::DataType;
 /// use serde_json;
 ///
 /// let data_type = DataType::Float64;
@@ -156,7 +156,7 @@ impl DataType {
     /// # Examples
     ///
     /// ```rust,ignore
-    /// use prism3_core::lang::DataType;
+    /// use qubit_common::lang::DataType;
     ///
     /// assert_eq!(DataType::Int32.as_str(), "int32");
     /// assert_eq!(DataType::String.as_str(), "string");
@@ -219,7 +219,7 @@ impl std::fmt::Display for DataType {
 /// ## Basic Usage
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::{DataType, DataTypeOf};
+/// use qubit_common::lang::{DataType, DataTypeOf};
 ///
 /// // Get the data type for a specific type
 /// assert_eq!(i32::DATA_TYPE, DataType::Int32);
@@ -230,7 +230,7 @@ impl std::fmt::Display for DataType {
 /// ## Generic Function Example
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::{DataType, DataTypeOf};
+/// use qubit_common::lang::{DataType, DataTypeOf};
 ///
 /// fn get_type_name<T: DataTypeOf>() -> &'static str {
 ///     T::DATA_TYPE.as_str()
@@ -244,7 +244,7 @@ impl std::fmt::Display for DataType {
 /// ## Generic Value Container Example
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::{DataType, DataTypeOf};
+/// use qubit_common::lang::{DataType, DataTypeOf};
 ///
 /// struct TypedValue<T: DataTypeOf> {
 ///     value: T,
@@ -271,7 +271,7 @@ impl std::fmt::Display for DataType {
 /// ## Type Validation Example
 ///
 /// ```rust,ignore
-/// use prism3_core::lang::{DataType, DataTypeOf};
+/// use qubit_common::lang::{DataType, DataTypeOf};
 ///
 /// fn validate_numeric_type<T: DataTypeOf>() -> bool {
 ///     matches!(T::DATA_TYPE,

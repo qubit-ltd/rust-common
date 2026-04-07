@@ -26,7 +26,7 @@
 #### 示例
 
 ```rust
-use prism3_core::Pair;
+use qubit_common::Pair;
 
 // 使用 new 方法创建
 let pair1 = Pair::new("key", "value");
@@ -63,7 +63,7 @@ let pair3: Pair<i32, i32> = (1, 2).into();
 #### 示例
 
 ```rust
-use prism3_core::Triple;
+use qubit_common::Triple;
 
 // 使用 new 方法创建
 let triple1 = Triple::new("name", 42, true);
@@ -140,5 +140,5 @@ Haixing Hu
 
 ## 版权
 
-Copyright (c) 2025. 3-Prism Co. Ltd. All rights reserved.
+Copyright (c) 2025 - 2026. Haixing Hu, Qubit Co. Ltd. All rights reserved.
 

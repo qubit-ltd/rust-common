@@ -1,17 +1,17 @@
-# Prism3 Core
+# Qubit Common
 
-[![CircleCI](https://circleci.com/gh/3-prism/prism3-rust-core.svg?style=shield)](https://circleci.com/gh/3-prism/prism3-rust-core)
-[![Coverage Status](https://coveralls.io/repos/github/3-prism/prism3-rust-core/badge.svg?branch=main)](https://coveralls.io/github/3-prism/prism3-rust-core?branch=main)
-[![Crates.io](https://img.shields.io/crates/v/prism3-core.svg?color=blue)](https://crates.io/crates/prism3-core)
+[![CircleCI](https://circleci.com/gh/qubit-ltd/common-rust.svg?style=shield)](https://circleci.com/gh/qubit-ltd/common-rust)
+[![Coverage Status](https://coveralls.io/repos/github/qubit-ltd/common-rust/badge.svg?branch=main)](https://coveralls.io/github/qubit-ltd/common-rust?branch=main)
+[![Crates.io](https://img.shields.io/crates/v/qubit-common.svg?color=blue)](https://crates.io/crates/qubit-common)
 [![Rust](https://img.shields.io/badge/rust-1.70+-blue.svg?logo=rust)](https://www.rust-lang.org)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![中文文档](https://img.shields.io/badge/文档-中文版-blue.svg)](README.zh_CN.md)
 
-A comprehensive Rust utility library providing language-level fundamental tools and data type support for the Prism3 ecosystem.
+A comprehensive Rust utility library providing language-level fundamental tools and data type support for Qubit projects.
 
 ## Overview
 
-Prism3 Core is designed to provide essential language-level utilities that are commonly needed across Rust applications. It offers robust argument validation, comprehensive data type definitions, and core utility functions that follow Rust idioms and best practices.
+Qubit Common is designed to provide essential language-level utilities that are commonly needed across Rust applications. It offers robust argument validation, comprehensive data type definitions, and core utility functions that follow Rust idioms and best practices.
 
 ## Features
 
@@ -39,7 +39,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-prism3-core = "0.1.0"
+qubit-common = "0.3.0"
 ```
 
 ## Quick Start
@@ -47,7 +47,7 @@ prism3-core = "0.1.0"
 ### Data Type Usage
 
 ```rust
-use prism3_core::lang::{DataType, DataTypeOf};
+use qubit_common::lang::{DataType, DataTypeOf};
 
 // Get data type information
 let data_type = DataType::Int32;
@@ -65,7 +65,7 @@ assert_eq!(json, "\"float64\"");
 ### Argument Validation
 
 ```rust
-use prism3_core::lang::argument::{
+use qubit_common::lang::argument::{
     NumericArgument, StringArgument, CollectionArgument, ArgumentResult
 };
 use regex::Regex;
@@ -97,7 +97,7 @@ fn process_user_input(
 ### State and Condition Checking
 
 ```rust
-use prism3_core::lang::argument::{
+use qubit_common::lang::argument::{
     check_argument, check_state, check_bounds, ArgumentResult
 };
 
@@ -131,19 +131,19 @@ fn process_data(value: i32, items: &[String]) -> ArgumentResult<()> {
 ## API Reference
 
 ### Data Types
-- [`DataType`](https://docs.rs/prism3-core/latest/prism3_core/lang/enum.DataType.html) - Universal data type enumeration
-- [`DataTypeOf`](https://docs.rs/prism3-core/latest/prism3_core/lang/trait.DataTypeOf.html) - Compile-time type mapping trait
+- [`DataType`](https://docs.rs/qubit-common/latest/qubit_common/lang/enum.DataType.html) - Universal data type enumeration
+- [`DataTypeOf`](https://docs.rs/qubit-common/latest/qubit_common/lang/trait.DataTypeOf.html) - Compile-time type mapping trait
 
 ### Argument Validation
-- [`NumericArgument`](https://docs.rs/prism3-core/latest/prism3_core/lang/argument/trait.NumericArgument.html) - Numeric validation methods
-- [`StringArgument`](https://docs.rs/prism3-core/latest/prism3_core/lang/argument/trait.StringArgument.html) - String validation methods
-- [`CollectionArgument`](https://docs.rs/prism3-core/latest/prism3_core/lang/argument/trait.CollectionArgument.html) - Collection validation methods
-- [`OptionArgument`](https://docs.rs/prism3-core/latest/prism3_core/lang/argument/trait.OptionArgument.html) - Option validation methods
+- [`NumericArgument`](https://docs.rs/qubit-common/latest/qubit_common/lang/argument/trait.NumericArgument.html) - Numeric validation methods
+- [`StringArgument`](https://docs.rs/qubit-common/latest/qubit_common/lang/argument/trait.StringArgument.html) - String validation methods
+- [`CollectionArgument`](https://docs.rs/qubit-common/latest/qubit_common/lang/argument/trait.CollectionArgument.html) - Collection validation methods
+- [`OptionArgument`](https://docs.rs/qubit-common/latest/qubit_common/lang/argument/trait.OptionArgument.html) - Option validation methods
 
 ### Core Functions
-- [`check_argument`](https://docs.rs/prism3-core/latest/prism3_core/lang/argument/fn.check_argument.html) - Basic argument validation
-- [`check_state`](https://docs.rs/prism3-core/latest/prism3_core/lang/argument/fn.check_state.html) - State validation
-- [`check_bounds`](https://docs.rs/prism3-core/latest/prism3_core/lang/argument/fn.check_bounds.html) - Bounds checking
+- [`check_argument`](https://docs.rs/qubit-common/latest/qubit_common/lang/argument/fn.check_argument.html) - Basic argument validation
+- [`check_state`](https://docs.rs/qubit-common/latest/qubit_common/lang/argument/fn.check_state.html) - State validation
+- [`check_bounds`](https://docs.rs/qubit-common/latest/qubit_common/lang/argument/fn.check_bounds.html) - Bounds checking
 
 ## Error Handling
 
@@ -155,7 +155,7 @@ All validation functions return `ArgumentResult<T>`, which is an alias for `Resu
 - Context information
 
 ```rust
-use prism3_core::lang::argument::{ArgumentError, ArgumentResult};
+use qubit_common::lang::argument::{ArgumentError, ArgumentResult};
 
 match validate_input(value) {
     Ok(result) => println!("Validation passed: {:?}", result),
@@ -274,7 +274,7 @@ For more details, see:
 
 ## License
 
-Copyright (c) 2025 3-Prism Co. Ltd. All rights reserved.
+Copyright (c) 2025 - 2026. Haixing Hu, Qubit Co. Ltd. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -298,8 +298,8 @@ When contributing tests, note that achieving 100% region coverage is not always 
 
 ## Author
 
-**Haixing Hu** - *3-Prism Co. Ltd.*
+**Haixing Hu** - *Qubit Co. Ltd.*
 
 ---
 
-For more information about the Prism3 ecosystem, visit our [GitHub homepage](https://github.com/3-prism).
+Project repository: [github.com/qubit-ltd/common-rust](https://github.com/qubit-ltd/common-rust).

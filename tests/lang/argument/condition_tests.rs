@@ -1,12 +1,12 @@
 /*******************************************************************************
  *
- *    Copyright (c) 2025.
- *    3-Prism Co. Ltd.
+ *    Copyright (c) 2025 - 2026.
+ *    Haixing Hu, Qubit Co. Ltd.
  *
  *    All rights reserved.
  *
  ******************************************************************************/
-use prism3_core::{
+use qubit_common::{
     check_argument,
     check_argument_fmt,
     check_argument_with_message,
