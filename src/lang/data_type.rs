@@ -27,6 +27,9 @@ use serde::{
     Deserialize,
     Serialize,
 };
+use serde_json;
+use std::collections::HashMap;
+use std::time::Duration;
 
 /// Universal data type enumeration for cross-module type representation
 ///
@@ -144,6 +147,18 @@ pub enum DataType {
     BigInteger,
     /// Big decimal type (BigDecimal)
     BigDecimal,
+    /// Platform-dependent signed integer (isize)
+    IntSize,
+    /// Platform-dependent unsigned integer (usize)
+    UIntSize,
+    /// Duration type (std::time::Duration)
+    Duration,
+    /// URL type (url::Url)
+    Url,
+    /// String map type (HashMap<String, String>)
+    StringMap,
+    /// JSON value type (serde_json::Value)
+    Json,
 }
 
 impl DataType {
@@ -184,6 +199,12 @@ impl DataType {
             DataType::Instant => "instant",
             DataType::BigInteger => "biginteger",
             DataType::BigDecimal => "bigdecimal",
+            DataType::IntSize => "intsize",
+            DataType::UIntSize => "uintsize",
+            DataType::Duration => "duration",
+            DataType::Url => "url",
+            DataType::StringMap => "stringmap",
+            DataType::Json => "json",
         }
     }
 }
@@ -373,4 +394,27 @@ impl DataTypeOf for BigInt {
 }
 impl DataTypeOf for BigDecimal {
     const DATA_TYPE: DataType = DataType::BigDecimal;
+}
+
+// Platform-dependent integer types
+impl DataTypeOf for isize {
+    const DATA_TYPE: DataType = DataType::IntSize;
+}
+impl DataTypeOf for usize {
+    const DATA_TYPE: DataType = DataType::UIntSize;
+}
+
+// Standard library types
+impl DataTypeOf for Duration {
+    const DATA_TYPE: DataType = DataType::Duration;
+}
+
+// String map type
+impl DataTypeOf for HashMap<String, String> {
+    const DATA_TYPE: DataType = DataType::StringMap;
+}
+
+// JSON value type
+impl DataTypeOf for serde_json::Value {
+    const DATA_TYPE: DataType = DataType::Json;
 }
