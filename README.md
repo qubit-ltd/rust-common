@@ -1,7 +1,7 @@
 # Qubit Common
 
-[![CircleCI](https://circleci.com/gh/qubit-ltd/common-rust.svg?style=shield)](https://circleci.com/gh/qubit-ltd/common-rust)
-[![Coverage Status](https://coveralls.io/repos/github/qubit-ltd/common-rust/badge.svg?branch=main)](https://coveralls.io/github/qubit-ltd/common-rust?branch=main)
+[![CircleCI](https://circleci.com/gh/qubit-ltd/rust-common.svg?style=shield)](https://circleci.com/gh/qubit-ltd/rust-common)
+[![Coverage Status](https://coveralls.io/repos/github/qubit-ltd/rust-common/badge.svg?branch=main)](https://coveralls.io/github/qubit-ltd/rust-common?branch=main)
 [![Crates.io](https://img.shields.io/crates/v/qubit-common.svg?color=blue)](https://crates.io/crates/qubit-common)
 [![Rust](https://img.shields.io/badge/rust-1.70+-blue.svg?logo=rust)](https://www.rust-lang.org)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
@@ -39,7 +39,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-qubit-common = "0.3.0"
+qubit-common = "0.5.1"
 ```
 
 ## Quick Start
@@ -117,16 +117,25 @@ fn process_data(value: i32, items: &[String]) -> ArgumentResult<()> {
 
 ## Supported Data Types
 
+The [`DataType`](https://docs.rs/qubit-common/latest/qubit_common/lang/enum.DataType.html) enum lists every variant; string forms use `as_str()` (for example `int32`, `instant`, `stringmap`). Types below also note [`DataTypeOf`](https://docs.rs/qubit-common/latest/qubit_common/lang/trait.DataTypeOf.html) where implemented.
+
 ### Basic Types
 - **Integers**: `i8`, `i16`, `i32`, `i64`, `i128`, `u8`, `u16`, `u32`, `u64`, `u128`
+- **Platform integers**: `isize`, `usize` (`DataType::IntSize`, `DataType::UIntSize`)
 - **Floats**: `f32`, `f64`
 - **Other**: `bool`, `char`, `String`
 
 ### Date/Time Types
-- **Chrono Integration**: `NaiveDate`, `NaiveTime`, `NaiveDateTime`, `DateTime<Utc>`
+- **Chrono**: `NaiveDate` → `DataType::Date`, `NaiveTime` → `Time`, `NaiveDateTime` → `DateTime`, `DateTime<Utc>` → `Instant` (UTC instant, analogous to Java `Instant`)
 
 ### Big Number Types
 - **Arbitrary Precision**: `BigInt`, `BigDecimal`
+
+### Duration, Maps, JSON, and URL
+- **Duration**: `std::time::Duration` → `DataType::Duration`
+- **String map**: `HashMap<String, String>` → `DataType::StringMap`
+- **JSON value**: `serde_json::Value` → `DataType::Json`
+- **URL**: `url::Url` → `DataType::Url` with [`DataTypeOf`](https://docs.rs/qubit-common/latest/qubit_common/lang/trait.DataTypeOf.html) implemented; the crate depends on [`url`](https://crates.io/crates/url) so the convention is fixed at the type level.
 
 ## API Reference
 
@@ -175,6 +184,7 @@ match validate_input(value) {
 - **chrono**: Date and time handling
 - **num-bigint**: Big integer support
 - **regex**: Pattern matching
+- **url**: Parsed URL type (`url::Url`) bound to `DataType::Url`
 
 ## Testing & Code Coverage
 
@@ -302,4 +312,4 @@ When contributing tests, note that achieving 100% region coverage is not always 
 
 ---
 
-Project repository: [github.com/qubit-ltd/common-rust](https://github.com/qubit-ltd/common-rust).
+Project repository: [github.com/qubit-ltd/rust-common](https://github.com/qubit-ltd/rust-common).

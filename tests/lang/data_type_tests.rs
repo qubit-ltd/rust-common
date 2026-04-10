@@ -149,10 +149,159 @@ fn test_data_type_debug() {
         DataType::Instant,
         DataType::BigInteger,
         DataType::BigDecimal,
+        DataType::IntSize,
+        DataType::UIntSize,
+        DataType::Duration,
+        DataType::Url,
+        DataType::StringMap,
+        DataType::Json,
     ];
 
     for dt in types {
         let debug_str = format!("{:?}", dt);
         assert!(!debug_str.is_empty(), "Debug output should not be empty");
     }
+}
+
+// ============================================================================
+// v0.4.0 新增类型测试
+// ============================================================================
+
+/// Test as_str for v0.4.0 new types
+#[test]
+fn test_data_type_as_str_v040_types() {
+    assert_eq!(DataType::IntSize.as_str(), "intsize");
+    assert_eq!(DataType::UIntSize.as_str(), "uintsize");
+    assert_eq!(DataType::Duration.as_str(), "duration");
+    assert_eq!(DataType::Url.as_str(), "url");
+    assert_eq!(DataType::StringMap.as_str(), "stringmap");
+    assert_eq!(DataType::Json.as_str(), "json");
+}
+
+/// Test Display for v0.4.0 new types
+#[test]
+fn test_data_type_display_v040_types() {
+    assert_eq!(DataType::IntSize.to_string(), "intsize");
+    assert_eq!(DataType::UIntSize.to_string(), "uintsize");
+    assert_eq!(DataType::Duration.to_string(), "duration");
+    assert_eq!(DataType::Url.to_string(), "url");
+    assert_eq!(DataType::StringMap.to_string(), "stringmap");
+    assert_eq!(DataType::Json.to_string(), "json");
+}
+
+/// Test equality for v0.4.0 new types
+#[test]
+fn test_data_type_equality_v040_types() {
+    assert_eq!(DataType::IntSize, DataType::IntSize);
+    assert_ne!(DataType::IntSize, DataType::UIntSize);
+    assert_ne!(DataType::IntSize, DataType::Int64);
+
+    assert_eq!(DataType::UIntSize, DataType::UIntSize);
+    assert_ne!(DataType::UIntSize, DataType::UInt64);
+
+    assert_eq!(DataType::Duration, DataType::Duration);
+    assert_ne!(DataType::Duration, DataType::Int64);
+
+    assert_eq!(DataType::Url, DataType::Url);
+    assert_ne!(DataType::Url, DataType::String);
+
+    assert_eq!(DataType::StringMap, DataType::StringMap);
+    assert_ne!(DataType::StringMap, DataType::String);
+
+    assert_eq!(DataType::Json, DataType::Json);
+    assert_ne!(DataType::Json, DataType::StringMap);
+}
+
+/// Test Copy for v0.4.0 new types
+#[test]
+fn test_data_type_copy_v040_types() {
+    let dt = DataType::Duration;
+    let dt2 = dt;
+    assert_eq!(dt, dt2);
+
+    let dt = DataType::Url;
+    let dt2 = dt;
+    assert_eq!(dt, dt2);
+}
+
+/// Test serde serialization for v0.4.0 new types
+///
+/// serde 默认使用变体名（PascalCase），与现有变体保持一致
+#[test]
+fn test_data_type_serde_v040_types() {
+    use serde_json;
+
+    let cases = [
+        (DataType::IntSize, "\"IntSize\""),
+        (DataType::UIntSize, "\"UIntSize\""),
+        (DataType::Duration, "\"Duration\""),
+        (DataType::Url, "\"Url\""),
+        (DataType::StringMap, "\"StringMap\""),
+        (DataType::Json, "\"Json\""),
+    ];
+
+    for (dt, expected_json) in cases {
+        let serialized = serde_json::to_string(&dt).unwrap();
+        assert_eq!(
+            serialized, expected_json,
+            "Serialization mismatch for {:?}",
+            dt
+        );
+
+        let deserialized: DataType = serde_json::from_str(&serialized).unwrap();
+        assert_eq!(deserialized, dt, "Deserialization mismatch for {:?}", dt);
+    }
+}
+
+/// Test DataTypeOf for v0.4.0 new types
+#[test]
+fn test_data_type_of_v040_types() {
+    use qubit_common::lang::DataTypeOf;
+    use std::collections::HashMap;
+    use std::time::Duration;
+
+    assert_eq!(isize::DATA_TYPE, DataType::IntSize);
+    assert_eq!(usize::DATA_TYPE, DataType::UIntSize);
+    assert_eq!(Duration::DATA_TYPE, DataType::Duration);
+    assert_eq!(url::Url::DATA_TYPE, DataType::Url);
+    assert_eq!(HashMap::<String, String>::DATA_TYPE, DataType::StringMap);
+    assert_eq!(serde_json::Value::DATA_TYPE, DataType::Json);
+}
+
+// ============================================================================
+// url::Url + DataTypeOf（crate 内绑定约定）
+// ============================================================================
+
+#[test]
+fn test_data_type_of_url_generic() {
+    use qubit_common::lang::DataTypeOf;
+
+    fn data_type_of<T: DataTypeOf>() -> DataType {
+        T::DATA_TYPE
+    }
+
+    assert_eq!(data_type_of::<url::Url>(), DataType::Url);
+}
+
+#[test]
+fn test_data_type_of_url_distinct_from_string() {
+    use qubit_common::lang::DataTypeOf;
+
+    assert_ne!(url::Url::DATA_TYPE, String::DATA_TYPE);
+    assert_eq!(String::DATA_TYPE, DataType::String);
+}
+
+#[test]
+fn test_data_type_of_url_inferred_from_value() {
+    use qubit_common::lang::DataTypeOf;
+
+    fn mapping_for<T: DataTypeOf>(_sample: &T) -> DataType {
+        T::DATA_TYPE
+    }
+
+    let https = url::Url::parse("https://example.com/path?x=1#frag").unwrap();
+    assert_eq!(mapping_for(&https), DataType::Url);
+
+    let file = url::Url::parse("file:///tmp/a.txt").unwrap();
+    assert_eq!(mapping_for(&file), DataType::Url);
 }

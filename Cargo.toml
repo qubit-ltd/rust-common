@@ -1,13 +1,13 @@
 [package]
 name = "qubit-common"
-version = "0.3.0"
+version = "0.5.1"
 edition = "2021"
 rust-version = "1.70"
 authors = ["Haixing Hu <starfish.hu@gmail.com>"]
 license = "Apache-2.0"
-repository = "https://github.com/qubit-ltd/common-rust"
+repository = "https://github.com/qubit-ltd/rust-common"
 description = "Foundational utilities and language-level tools for Rust application development"
-homepage = "https://github.com/qubit-ltd/common-rust"
+homepage = "https://github.com/qubit-ltd/rust-common"
 documentation = "https://docs.rs/qubit-common"
 readme = "README.md"
 keywords = ["utility", "validation", "argument", "datatype", "qubit"]
@@ -35,3 +35,4 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 thiserror = "2.0.17"
 tracing = "0.1"
+url = "2.5"
