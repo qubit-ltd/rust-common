@@ -177,6 +177,7 @@ impl DataType {
     /// assert_eq!(DataType::Int32.as_str(), "int32");
     /// assert_eq!(DataType::String.as_str(), "string");
     /// ```
+    #[inline]
     pub const fn as_str(&self) -> &'static str {
         match self {
             DataType::Bool => "bool",

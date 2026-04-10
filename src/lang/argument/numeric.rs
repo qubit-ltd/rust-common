@@ -417,6 +417,7 @@ impl<T> NumericArgument for T
 where
     T: PartialOrd + Default + Display + Copy,
 {
+    #[inline]
     fn require_zero(self, name: &str) -> ArgumentResult<Self> {
         if self != T::default() {
             return Err(ArgumentError::new(format!(
@@ -427,6 +428,7 @@ where
         Ok(self)
     }
 
+    #[inline]
     fn require_non_zero(self, name: &str) -> ArgumentResult<Self> {
         if self == T::default() {
             return Err(ArgumentError::new(format!(
@@ -437,6 +439,7 @@ where
         Ok(self)
     }
 
+    #[inline]
     fn require_positive(self, name: &str) -> ArgumentResult<Self> {
         if self <= T::default() {
             return Err(ArgumentError::new(format!(
@@ -447,6 +450,7 @@ where
         Ok(self)
     }
 
+    #[inline]
     fn require_non_negative(self, name: &str) -> ArgumentResult<Self> {
         if self < T::default() {
             return Err(ArgumentError::new(format!(
@@ -457,6 +461,7 @@ where
         Ok(self)
     }
 
+    #[inline]
     fn require_negative(self, name: &str) -> ArgumentResult<Self> {
         if self >= T::default() {
             return Err(ArgumentError::new(format!(
@@ -467,6 +472,7 @@ where
         Ok(self)
     }
 
+    #[inline]
     fn require_non_positive(self, name: &str) -> ArgumentResult<Self> {
         if self > T::default() {
             return Err(ArgumentError::new(format!(
@@ -477,6 +483,7 @@ where
         Ok(self)
     }
 
+    #[inline]
     fn require_in_closed_range(self, name: &str, min: Self, max: Self) -> ArgumentResult<Self> {
         if self < min || self > max {
             return Err(ArgumentError::new(format!(
@@ -487,6 +494,7 @@ where
         Ok(self)
     }
 
+    #[inline]
     fn require_in_open_range(self, name: &str, min: Self, max: Self) -> ArgumentResult<Self> {
         if self <= min || self >= max {
             return Err(ArgumentError::new(format!(
@@ -497,6 +505,7 @@ where
         Ok(self)
     }
 
+    #[inline]
     fn require_in_left_open_range(self, name: &str, min: Self, max: Self) -> ArgumentResult<Self> {
         if self <= min || self > max {
             return Err(ArgumentError::new(format!(
@@ -507,6 +516,7 @@ where
         Ok(self)
     }
 
+    #[inline]
     fn require_in_right_open_range(self, name: &str, min: Self, max: Self) -> ArgumentResult<Self> {
         if self < min || self >= max {
             return Err(ArgumentError::new(format!(
@@ -517,6 +527,7 @@ where
         Ok(self)
     }
 
+    #[inline]
     fn require_less(self, name: &str, max: Self) -> ArgumentResult<Self> {
         if self >= max {
             return Err(ArgumentError::new(format!(
@@ -527,6 +538,7 @@ where
         Ok(self)
     }
 
+    #[inline]
     fn require_less_equal(self, name: &str, max: Self) -> ArgumentResult<Self> {
         if self > max {
             return Err(ArgumentError::new(format!(
@@ -537,6 +549,7 @@ where
         Ok(self)
     }
 
+    #[inline]
     fn require_greater(self, name: &str, min: Self) -> ArgumentResult<Self> {
         if self <= min {
             return Err(ArgumentError::new(format!(
@@ -547,6 +560,7 @@ where
         Ok(self)
     }
 
+    #[inline]
     fn require_greater_equal(self, name: &str, min: Self) -> ArgumentResult<Self> {
         if self < min {
             return Err(ArgumentError::new(format!(
@@ -577,6 +591,7 @@ where
 /// # Author
 ///
 /// Haixing Hu
+#[inline]
 pub fn require_equal<T>(name1: &str, value1: T, name2: &str, value2: T) -> ArgumentResult<()>
 where
     T: PartialEq + Display,
@@ -611,6 +626,7 @@ where
 /// # Author
 ///
 /// Haixing Hu
+#[inline]
 pub fn require_not_equal<T>(name1: &str, value1: T, name2: &str, value2: T) -> ArgumentResult<()>
 where
     T: PartialEq + Display,

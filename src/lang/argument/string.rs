@@ -238,6 +238,7 @@ pub trait StringArgument {
 }
 
 impl StringArgument for str {
+    #[inline]
     fn require_non_blank(&self, name: &str) -> ArgumentResult<&Self> {
         if self.trim().is_empty() {
             return Err(ArgumentError::new(format!(
@@ -248,6 +249,7 @@ impl StringArgument for str {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_be(&self, name: &str, length: usize) -> ArgumentResult<&Self> {
         let actual_length = self.len();
         if actual_length != length {
@@ -259,6 +261,7 @@ impl StringArgument for str {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_at_least(&self, name: &str, min_length: usize) -> ArgumentResult<&Self> {
         let actual_length = self.len();
         if actual_length < min_length {
@@ -270,6 +273,7 @@ impl StringArgument for str {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_at_most(&self, name: &str, max_length: usize) -> ArgumentResult<&Self> {
         let actual_length = self.len();
         if actual_length > max_length {
@@ -281,6 +285,7 @@ impl StringArgument for str {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_in_range(
         &self,
         name: &str,
@@ -297,6 +302,7 @@ impl StringArgument for str {
         Ok(self)
     }
 
+    #[inline]
     fn require_match(&self, name: &str, pattern: &Regex) -> ArgumentResult<&Self> {
         if !pattern.is_match(self) {
             return Err(ArgumentError::new(format!(
@@ -308,6 +314,7 @@ impl StringArgument for str {
         Ok(self)
     }
 
+    #[inline]
     fn require_not_match(&self, name: &str, pattern: &Regex) -> ArgumentResult<&Self> {
         if pattern.is_match(self) {
             return Err(ArgumentError::new(format!(
@@ -321,6 +328,7 @@ impl StringArgument for str {
 }
 
 impl StringArgument for String {
+    #[inline]
     fn require_non_blank(&self, name: &str) -> ArgumentResult<&Self> {
         if self.trim().is_empty() {
             return Err(ArgumentError::new(format!(
@@ -331,6 +339,7 @@ impl StringArgument for String {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_be(&self, name: &str, length: usize) -> ArgumentResult<&Self> {
         let actual_length = self.len();
         if actual_length != length {
@@ -342,6 +351,7 @@ impl StringArgument for String {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_at_least(&self, name: &str, min_length: usize) -> ArgumentResult<&Self> {
         let actual_length = self.len();
         if actual_length < min_length {
@@ -353,6 +363,7 @@ impl StringArgument for String {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_at_most(&self, name: &str, max_length: usize) -> ArgumentResult<&Self> {
         let actual_length = self.len();
         if actual_length > max_length {
@@ -364,6 +375,7 @@ impl StringArgument for String {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_in_range(
         &self,
         name: &str,
@@ -380,6 +392,7 @@ impl StringArgument for String {
         Ok(self)
     }
 
+    #[inline]
     fn require_match(&self, name: &str, pattern: &Regex) -> ArgumentResult<&Self> {
         if !pattern.is_match(self) {
             return Err(ArgumentError::new(format!(
@@ -391,6 +404,7 @@ impl StringArgument for String {
         Ok(self)
     }
 
+    #[inline]
     fn require_not_match(&self, name: &str, pattern: &Regex) -> ArgumentResult<&Self> {
         if pattern.is_match(self) {
             return Err(ArgumentError::new(format!(

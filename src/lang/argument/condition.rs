@@ -45,6 +45,7 @@ use super::error::{
 ///
 /// Haixing Hu
 ///
+#[inline]
 pub fn check_argument(condition: bool) -> ArgumentResult<()> {
     if !condition {
         return Err(ArgumentError::new("Argument condition not satisfied"));
@@ -80,6 +81,7 @@ pub fn check_argument(condition: bool) -> ArgumentResult<()> {
 ///
 /// Haixing Hu
 ///
+#[inline]
 pub fn check_argument_with_message(condition: bool, message: &str) -> ArgumentResult<()> {
     if !condition {
         return Err(ArgumentError::new(message));
@@ -117,6 +119,7 @@ pub fn check_argument_with_message(condition: bool, message: &str) -> ArgumentRe
 ///
 /// Haixing Hu
 ///
+#[inline]
 pub fn check_argument_fmt(condition: bool, message: String) -> ArgumentResult<()> {
     if !condition {
         return Err(ArgumentError::new(message));
@@ -149,6 +152,7 @@ pub fn check_argument_fmt(condition: bool, message: String) -> ArgumentResult<()
 ///
 /// Haixing Hu
 ///
+#[inline]
 pub fn check_state(condition: bool) -> ArgumentResult<()> {
     if !condition {
         return Err(ArgumentError::new("State condition not satisfied"));
@@ -184,6 +188,7 @@ pub fn check_state(condition: bool) -> ArgumentResult<()> {
 ///
 /// Haixing Hu
 ///
+#[inline]
 pub fn check_state_with_message(condition: bool, message: &str) -> ArgumentResult<()> {
     if !condition {
         return Err(ArgumentError::new(message));
@@ -219,6 +224,7 @@ pub fn check_state_with_message(condition: bool, message: &str) -> ArgumentResul
 ///
 /// Haixing Hu
 ///
+#[inline]
 pub fn check_bounds(offset: usize, length: usize, total_length: usize) -> ArgumentResult<()> {
     if offset > total_length {
         return Err(ArgumentError::new(format!(
@@ -262,6 +268,7 @@ pub fn check_bounds(offset: usize, length: usize, total_length: usize) -> Argume
 ///
 /// Haixing Hu
 ///
+#[inline]
 pub fn check_element_index(index: usize, size: usize) -> ArgumentResult<usize> {
     if index >= size {
         return Err(ArgumentError::new(format!(
@@ -299,6 +306,7 @@ pub fn check_element_index(index: usize, size: usize) -> ArgumentResult<usize> {
 ///
 /// Haixing Hu
 ///
+#[inline]
 pub fn check_position_index(index: usize, size: usize) -> ArgumentResult<usize> {
     if index > size {
         return Err(ArgumentError::new(format!(
@@ -335,6 +343,7 @@ pub fn check_position_index(index: usize, size: usize) -> ArgumentResult<usize> 
 ///
 /// Haixing Hu
 ///
+#[inline]
 pub fn check_position_indexes(start: usize, end: usize, size: usize) -> ArgumentResult<()> {
     if start > end {
         return Err(ArgumentError::new(format!(

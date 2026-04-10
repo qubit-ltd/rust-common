@@ -185,6 +185,7 @@ pub trait CollectionArgument {
 }
 
 impl<T> CollectionArgument for [T] {
+    #[inline]
     fn require_non_empty(&self, name: &str) -> ArgumentResult<&Self> {
         if self.is_empty() {
             return Err(ArgumentError::new(format!(
@@ -195,6 +196,7 @@ impl<T> CollectionArgument for [T] {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_be(&self, name: &str, length: usize) -> ArgumentResult<&Self> {
         let actual_length = self.len();
         if actual_length != length {
@@ -206,6 +208,7 @@ impl<T> CollectionArgument for [T] {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_at_least(&self, name: &str, min_length: usize) -> ArgumentResult<&Self> {
         let actual_length = self.len();
         if actual_length < min_length {
@@ -217,6 +220,7 @@ impl<T> CollectionArgument for [T] {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_at_most(&self, name: &str, max_length: usize) -> ArgumentResult<&Self> {
         let actual_length = self.len();
         if actual_length > max_length {
@@ -228,6 +232,7 @@ impl<T> CollectionArgument for [T] {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_in_range(
         &self,
         name: &str,
@@ -246,6 +251,7 @@ impl<T> CollectionArgument for [T] {
 }
 
 impl<T> CollectionArgument for Vec<T> {
+    #[inline]
     fn require_non_empty(&self, name: &str) -> ArgumentResult<&Self> {
         if self.is_empty() {
             return Err(ArgumentError::new(format!(
@@ -256,6 +262,7 @@ impl<T> CollectionArgument for Vec<T> {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_be(&self, name: &str, length: usize) -> ArgumentResult<&Self> {
         let actual_length = self.len();
         if actual_length != length {
@@ -267,6 +274,7 @@ impl<T> CollectionArgument for Vec<T> {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_at_least(&self, name: &str, min_length: usize) -> ArgumentResult<&Self> {
         let actual_length = self.len();
         if actual_length < min_length {
@@ -278,6 +286,7 @@ impl<T> CollectionArgument for Vec<T> {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_at_most(&self, name: &str, max_length: usize) -> ArgumentResult<&Self> {
         let actual_length = self.len();
         if actual_length > max_length {
@@ -289,6 +298,7 @@ impl<T> CollectionArgument for Vec<T> {
         Ok(self)
     }
 
+    #[inline]
     fn require_length_in_range(
         &self,
         name: &str,
@@ -335,6 +345,7 @@ impl<T> CollectionArgument for Vec<T> {
 ///
 /// Haixing Hu
 ///
+#[inline]
 pub fn require_element_non_null<T>(name: &str, collection: &[Option<T>]) -> ArgumentResult<()> {
     for (index, item) in collection.iter().enumerate() {
         if item.is_none() {

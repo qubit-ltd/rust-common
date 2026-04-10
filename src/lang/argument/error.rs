@@ -58,6 +58,7 @@ impl ArgumentError {
     ///
     /// let error = ArgumentError::new("Value cannot be negative");
     /// ```
+    #[inline]
     pub fn new(message: impl Into<String>) -> Self {
         Self {
             message: message.into(),
@@ -69,6 +70,7 @@ impl ArgumentError {
     /// # Returns
     ///
     /// Returns a reference to the error message
+    #[inline]
     pub fn message(&self) -> &str {
         &self.message
     }
@@ -83,12 +85,14 @@ impl fmt::Display for ArgumentError {
 impl std::error::Error for ArgumentError {}
 
 impl From<String> for ArgumentError {
+    #[inline]
     fn from(message: String) -> Self {
         Self::new(message)
     }
 }
 
 impl From<&str> for ArgumentError {
+    #[inline]
     fn from(message: &str) -> Self {
         Self::new(message)
     }

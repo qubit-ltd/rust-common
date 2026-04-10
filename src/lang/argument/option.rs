@@ -157,6 +157,7 @@ pub trait OptionArgument<T> {
 }
 
 impl<T> OptionArgument<T> for Option<T> {
+    #[inline]
     fn require_non_null(self, name: &str) -> ArgumentResult<T> {
         match self {
             Some(value) => Ok(value),
@@ -167,6 +168,7 @@ impl<T> OptionArgument<T> for Option<T> {
         }
     }
 
+    #[inline]
     fn require_non_null_and<F>(self, name: &str, predicate: F, error_msg: &str) -> ArgumentResult<T>
     where
         F: FnOnce(&T) -> bool,
@@ -187,6 +189,7 @@ impl<T> OptionArgument<T> for Option<T> {
         }
     }
 
+    #[inline]
     fn validate_if_present<F>(self, _name: &str, validator: F) -> ArgumentResult<Option<T>>
     where
         F: FnOnce(&T) -> ArgumentResult<T>,
@@ -234,6 +237,7 @@ impl<T> OptionArgument<T> for Option<T> {
 ///
 /// Haixing Hu
 ///
+#[inline]
 pub fn require_null_or<T, F>(
     name: &str,
     value: Option<T>,
