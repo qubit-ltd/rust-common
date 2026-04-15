@@ -346,7 +346,7 @@ dependencies = [
 
 [[package]]
 name = "qubit-common"
-version = "0.5.3"
+version = "0.5.4"
 dependencies = [
  "bigdecimal",
  "chrono",
