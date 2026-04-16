@@ -27,7 +27,7 @@
 //! # Usage Examples
 //!
 //! ```rust,ignore
-//! use common_rs::lang::argument::{
+//! use qubit_common::lang::argument::{
 //!     NumericArgument, StringArgument, CollectionArgument, ArgumentResult
 //! };
 //! use regex::Regex;
