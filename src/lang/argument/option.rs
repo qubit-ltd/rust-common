@@ -196,10 +196,7 @@ impl<T> OptionArgument<T> for Option<T> {
     {
         match self {
             None => Ok(None),
-            Some(ref value) => match validator(value) {
-                Ok(_) => Ok(self),
-                Err(e) => Err(e),
-            },
+            Some(value) => validator(&value).map(Some),
         }
     }
 }

@@ -221,6 +221,17 @@ fn test_validate_if_present_success_with_value() {
 }
 
 #[test]
+fn test_validate_if_present_uses_validator_output_value() {
+    let value: Option<i32> = Some(10);
+    let result = value.validate_if_present("value", |v| Ok(*v + 5));
+    assert_eq!(result.unwrap(), Some(15));
+
+    let text: Option<String> = Some("  hello  ".to_string());
+    let result2 = text.validate_if_present("text", |s| Ok(s.trim().to_uppercase()));
+    assert_eq!(result2.unwrap(), Some("HELLO".to_string()));
+}
+
+#[test]
 fn test_require_null_or_success_with_value() {
     // Test Some value that satisfies the condition
     let value: Option<i32> = Some(50);
