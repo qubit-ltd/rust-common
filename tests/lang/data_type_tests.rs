@@ -217,14 +217,42 @@ fn test_data_type_from_str_all_types() {
     assert_eq!(DataType::from_str("bool").unwrap(), DataType::Bool);
     assert_eq!(DataType::from_str("char").unwrap(), DataType::Char);
     assert_eq!(DataType::from_str("Int32").unwrap(), DataType::Int32);
-    assert_eq!(DataType::from_str("stringmap").unwrap(), DataType::StringMap);
+    assert_eq!(
+        DataType::from_str("stringmap").unwrap(),
+        DataType::StringMap
+    );
     assert_eq!(DataType::from_str("json").unwrap(), DataType::Json);
 }
 
 #[test]
 fn test_data_type_from_str_with_case_insensitive_match() {
     assert_eq!(DataType::from_str("UINT64").unwrap(), DataType::UInt64);
-    assert_eq!(DataType::from_str("BigDecimal").unwrap(), DataType::BigDecimal);
+    assert_eq!(
+        DataType::from_str("BigDecimal").unwrap(),
+        DataType::BigDecimal
+    );
+}
+
+#[test]
+fn test_data_type_from_str_case_insensitive_for_all_variants() {
+    for data_type in all_data_types() {
+        let canonical = data_type.as_str();
+        let uppercase = canonical.to_ascii_uppercase();
+        assert_eq!(DataType::from_str(&uppercase).unwrap(), data_type);
+
+        let alternating_case: String = canonical
+            .chars()
+            .enumerate()
+            .map(|(index, ch)| {
+                if index % 2 == 0 {
+                    ch.to_ascii_uppercase()
+                } else {
+                    ch.to_ascii_lowercase()
+                }
+            })
+            .collect();
+        assert_eq!(DataType::from_str(&alternating_case).unwrap(), data_type);
+    }
 }
 
 #[test]
@@ -310,21 +338,24 @@ fn test_data_type_serde_all_types_use_as_str_protocol() {
 }
 
 #[test]
-fn test_data_type_deserialize_accepts_legacy_pascal_case() {
+fn test_data_type_deserialize_rejects_non_lowercase_values() {
     use serde_json;
 
     let cases = [
-        ("\"Bool\"", DataType::Bool),
-        ("\"Int32\"", DataType::Int32),
-        ("\"DateTime\"", DataType::DateTime),
-        ("\"BigDecimal\"", DataType::BigDecimal),
-        ("\"IntSize\"", DataType::IntSize),
-        ("\"StringMap\"", DataType::StringMap),
+        "\"Bool\"",
+        "\"Int32\"",
+        "\"DateTime\"",
+        "\"BigDecimal\"",
+        "\"IntSize\"",
+        "\"StringMap\"",
     ];
 
-    for (raw, expected) in cases {
-        let deserialized: DataType = serde_json::from_str(raw).unwrap();
-        assert_eq!(deserialized, expected);
+    for raw in cases {
+        let deserialized: Result<DataType, _> = serde_json::from_str(raw);
+        assert!(
+            deserialized.is_err(),
+            "Should reject non-lowercase JSON: {raw}"
+        );
     }
 }
 
