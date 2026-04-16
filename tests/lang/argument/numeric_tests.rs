@@ -99,9 +99,11 @@ fn free_functions_equal_and_not_equal() {
 #[test]
 fn float_edge_cases_nan_and_infinite() {
     let nan = f64::NAN;
-    assert!(nan.require_in_closed_range("f", -1.0, 1.0).is_ok());
-    assert!(nan.require_less("f", 0.0).is_ok());
-    assert!(nan.require_greater("f", 0.0).is_ok());
+    assert!(nan.require_in_closed_range("f", -1.0, 1.0).is_err());
+    assert!(nan.require_less("f", 0.0).is_err());
+    assert!(nan.require_greater("f", 0.0).is_err());
+    assert!(nan.require_zero("f").is_err());
+    assert!(nan.require_non_zero("f").is_err());
 
     let inf = f64::INFINITY;
     assert!(inf.require_less("f", f64::MAX).is_err());
@@ -110,6 +112,14 @@ fn float_edge_cases_nan_and_infinite() {
     let ninf = f64::NEG_INFINITY;
     assert!(ninf.require_greater("f", f64::MIN).is_err());
     assert!(ninf.require_less_equal("f", 0.0).is_ok());
+}
+
+#[test]
+fn float_range_bounds_nan_should_fail() {
+    assert!(1.0f64.require_in_closed_range("f", f64::NAN, 1.0).is_err());
+    assert!(1.0f64.require_in_closed_range("f", -1.0, f64::NAN).is_err());
+    assert!(1.0f64.require_in_open_range("f", f64::NAN, 1.0).is_err());
+    assert!(1.0f64.require_in_open_range("f", -1.0, f64::NAN).is_err());
 }
 
 #[test]
