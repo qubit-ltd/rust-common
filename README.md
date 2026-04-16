@@ -39,7 +39,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-qubit-common = "0.5.1"
+qubit-common = "0.6.0"
 ```
 
 ## Quick Start
