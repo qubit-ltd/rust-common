@@ -14,7 +14,7 @@
 //!
 //! Haixing Hu
 
-use super::error::{
+use super::argument_error::{
     ArgumentError,
     ArgumentResult,
 };
@@ -25,11 +25,12 @@ trait NumericValue: PartialOrd + Display + Copy {
     /// Returns the additive identity (zero) of the numeric type.
     fn zero() -> Self;
 
-    /// Returns true when the value is NaN.
+    /// Rejects NaN values when the numeric type supports NaN.
     ///
-    /// Non-floating-point types always return false.
-    fn is_nan(self) -> bool {
-        false
+    /// Non-floating-point types always pass this check.
+    #[inline]
+    fn reject_nan(self, _name: &str) -> ArgumentResult<()> {
+        Ok(())
     }
 }
 
@@ -56,8 +57,14 @@ impl NumericValue for f32 {
     }
 
     #[inline]
-    fn is_nan(self) -> bool {
-        self.is_nan()
+    fn reject_nan(self, name: &str) -> ArgumentResult<()> {
+        if self.is_nan() {
+            return Err(ArgumentError::new(format!(
+                "Parameter '{}' must not be NaN",
+                name
+            )));
+        }
+        Ok(())
     }
 }
 
@@ -68,20 +75,15 @@ impl NumericValue for f64 {
     }
 
     #[inline]
-    fn is_nan(self) -> bool {
-        self.is_nan()
+    fn reject_nan(self, name: &str) -> ArgumentResult<()> {
+        if self.is_nan() {
+            return Err(ArgumentError::new(format!(
+                "Parameter '{}' must not be NaN",
+                name
+            )));
+        }
+        Ok(())
     }
-}
-
-#[inline]
-fn reject_nan<T: NumericValue>(name: &str, value: T) -> ArgumentResult<()> {
-    if value.is_nan() {
-        return Err(ArgumentError::new(format!(
-            "Parameter '{}' must not be NaN",
-            name
-        )));
-    }
-    Ok(())
 }
 
 /// Numeric argument validation trait
@@ -484,7 +486,7 @@ where
 {
     #[inline]
     fn require_zero(self, name: &str) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
+        self.reject_nan(name)?;
         if self != T::zero() {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' must be zero but was: {}",
@@ -496,7 +498,7 @@ where
 
     #[inline]
     fn require_non_zero(self, name: &str) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
+        self.reject_nan(name)?;
         if self == T::zero() {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' cannot be zero",
@@ -508,7 +510,7 @@ where
 
     #[inline]
     fn require_positive(self, name: &str) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
+        self.reject_nan(name)?;
         if self <= T::zero() {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' must be positive but was: {}",
@@ -520,7 +522,7 @@ where
 
     #[inline]
     fn require_non_negative(self, name: &str) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
+        self.reject_nan(name)?;
         if self < T::zero() {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' must be non-negative but was: {}",
@@ -532,7 +534,7 @@ where
 
     #[inline]
     fn require_negative(self, name: &str) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
+        self.reject_nan(name)?;
         if self >= T::zero() {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' must be negative but was: {}",
@@ -544,7 +546,7 @@ where
 
     #[inline]
     fn require_non_positive(self, name: &str) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
+        self.reject_nan(name)?;
         if self > T::zero() {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' must be non-positive but was: {}",
@@ -556,9 +558,9 @@ where
 
     #[inline]
     fn require_in_closed_range(self, name: &str, min: Self, max: Self) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
-        reject_nan("min", min)?;
-        reject_nan("max", max)?;
+        self.reject_nan(name)?;
+        min.reject_nan("min")?;
+        max.reject_nan("max")?;
         if min > max {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' has invalid range: min {} is greater than max {}",
@@ -576,9 +578,9 @@ where
 
     #[inline]
     fn require_in_open_range(self, name: &str, min: Self, max: Self) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
-        reject_nan("min", min)?;
-        reject_nan("max", max)?;
+        self.reject_nan(name)?;
+        min.reject_nan("min")?;
+        max.reject_nan("max")?;
         if min >= max {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' has invalid range: min {} must be less than max {}",
@@ -596,9 +598,9 @@ where
 
     #[inline]
     fn require_in_left_open_range(self, name: &str, min: Self, max: Self) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
-        reject_nan("min", min)?;
-        reject_nan("max", max)?;
+        self.reject_nan(name)?;
+        min.reject_nan("min")?;
+        max.reject_nan("max")?;
         if min > max {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' has invalid range: min {} is greater than max {}",
@@ -616,9 +618,9 @@ where
 
     #[inline]
     fn require_in_right_open_range(self, name: &str, min: Self, max: Self) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
-        reject_nan("min", min)?;
-        reject_nan("max", max)?;
+        self.reject_nan(name)?;
+        min.reject_nan("min")?;
+        max.reject_nan("max")?;
         if min > max {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' has invalid range: min {} is greater than max {}",
@@ -636,8 +638,8 @@ where
 
     #[inline]
     fn require_less(self, name: &str, max: Self) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
-        reject_nan("max", max)?;
+        self.reject_nan(name)?;
+        max.reject_nan("max")?;
         if self >= max {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' must be less than {} but was: {}",
@@ -649,8 +651,8 @@ where
 
     #[inline]
     fn require_less_equal(self, name: &str, max: Self) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
-        reject_nan("max", max)?;
+        self.reject_nan(name)?;
+        max.reject_nan("max")?;
         if self > max {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' must be less than or equal to {} but was: {}",
@@ -662,8 +664,8 @@ where
 
     #[inline]
     fn require_greater(self, name: &str, min: Self) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
-        reject_nan("min", min)?;
+        self.reject_nan(name)?;
+        min.reject_nan("min")?;
         if self <= min {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' must be greater than {} but was: {}",
@@ -675,8 +677,8 @@ where
 
     #[inline]
     fn require_greater_equal(self, name: &str, min: Self) -> ArgumentResult<Self> {
-        reject_nan(name, self)?;
-        reject_nan("min", min)?;
+        self.reject_nan(name)?;
+        min.reject_nan("min")?;
         if self < min {
             return Err(ArgumentError::new(format!(
                 "Parameter '{}' must be greater than or equal to {} but was: {}",

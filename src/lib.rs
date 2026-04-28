@@ -58,10 +58,8 @@ pub use lang::{
         BoxError,
         BoxResult,
     },
-    data_type::{
-        DataType,
-        DataTypeOf,
-    },
+    data_type::DataType,
+    data_type_of::DataTypeOf,
 };
 
 // Re-export utility types

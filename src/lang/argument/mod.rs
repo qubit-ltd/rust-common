@@ -12,11 +12,11 @@
 //!
 //! # Module Organization
 //!
-//! - `error`: Error type definitions
-//! - `numeric`: Numeric argument validation
-//! - `string`: String argument validation
-//! - `collection`: Collection argument validation
-//! - `option`: Option argument validation
+//! - `argument_error`: Error type definitions
+//! - `numeric_argument`: Numeric argument validation
+//! - `string_argument`: String argument validation
+//! - `collection_argument`: Collection argument validation
+//! - `option_argument`: Option argument validation
 //! - `condition`: Condition and state validation
 //!
 //! # Design Philosophy
@@ -60,15 +60,19 @@
 //!
 //! Haixing Hu
 
-pub mod collection;
+pub mod argument_error;
+pub mod collection_argument;
 pub mod condition;
-pub mod error;
-pub mod numeric;
-pub mod option;
-pub mod string;
+pub mod numeric_argument;
+pub mod option_argument;
+pub mod string_argument;
 
 // Re-export main types and traits
-pub use collection::{
+pub use argument_error::{
+    ArgumentError,
+    ArgumentResult,
+};
+pub use collection_argument::{
     CollectionArgument,
     require_element_non_null,
 };
@@ -83,17 +87,13 @@ pub use condition::{
     check_state,
     check_state_with_message,
 };
-pub use error::{
-    ArgumentError,
-    ArgumentResult,
-};
-pub use numeric::{
+pub use numeric_argument::{
     NumericArgument,
     require_equal,
     require_not_equal,
 };
-pub use option::{
+pub use option_argument::{
     OptionArgument,
     require_null_or,
 };
-pub use string::StringArgument;
+pub use string_argument::StringArgument;

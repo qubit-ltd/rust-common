@@ -14,7 +14,7 @@
 //!
 //! Haixing Hu
 
-use super::error::{
+use super::argument_error::{
     ArgumentError,
     ArgumentResult,
 };
