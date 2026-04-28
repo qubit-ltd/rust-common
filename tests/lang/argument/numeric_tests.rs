@@ -73,6 +73,43 @@ fn range_checks_min_greater_than_max_should_fail() {
 }
 
 #[test]
+fn range_checks_cover_remaining_branch_paths() {
+    // open range rejects equal bounds via `min >= max`
+    assert!(5i32.require_in_open_range("x", 5, 5).is_err());
+
+    // closed range: explicitly hit the `self > max` side.
+    assert!(11i32.require_in_closed_range("x", 1, 10).is_err());
+
+    // left-open range: explicitly hit the `self > max` side.
+    assert!(11i32.require_in_left_open_range("x", 1, 10).is_err());
+
+    // right-open range: explicitly hit the `self < min` side.
+    assert!(0i32.require_in_right_open_range("x", 1, 10).is_err());
+}
+
+#[test]
+fn range_checks_cover_more_integer_monomorphizations() {
+    fn exercise<T>(value: T, min: T, max: T)
+    where
+        T: NumericArgument + Copy,
+    {
+        assert!(value.require_in_closed_range("x", min, max).is_ok());
+        assert!(value.require_in_open_range("x", min, max).is_ok());
+        assert!(value.require_in_left_open_range("x", min, max).is_ok());
+        assert!(value.require_in_right_open_range("x", min, max).is_ok());
+    }
+
+    exercise(2i8, 1i8, 3i8);
+    exercise(2i16, 1i16, 3i16);
+    exercise(2i64, 1i64, 3i64);
+    exercise(2isize, 1isize, 3isize);
+    exercise(2u8, 1u8, 3u8);
+    exercise(2u16, 1u16, 3u16);
+    exercise(2u64, 1u64, 3u64);
+    exercise(2usize, 1usize, 3usize);
+}
+
+#[test]
 fn comparison_checks() {
     assert!(5i32.require_less("x", 6).is_ok());
     assert!(5i32.require_less("x", 5).is_err());
@@ -163,6 +200,32 @@ fn f32_covers_numeric_value_impl_and_nan_checks() {
 
     assert!(0.5f32.require_in_open_range("f", 0.0, 1.0).is_ok());
     assert!(f32::NAN.require_in_open_range("f", 0.0, 1.0).is_err());
+
+    assert!(0.5f32.require_in_left_open_range("f", 0.0, 1.0).is_ok());
+    assert!(f32::NAN.require_in_left_open_range("f", 0.0, 1.0).is_err());
+    assert!(
+        0.5f32
+            .require_in_left_open_range("f", f32::NAN, 1.0)
+            .is_err()
+    );
+    assert!(
+        0.5f32
+            .require_in_left_open_range("f", 0.0, f32::NAN)
+            .is_err()
+    );
+
+    assert!(0.5f32.require_in_right_open_range("f", 0.0, 1.0).is_ok());
+    assert!(f32::NAN.require_in_right_open_range("f", 0.0, 1.0).is_err());
+    assert!(
+        0.5f32
+            .require_in_right_open_range("f", f32::NAN, 1.0)
+            .is_err()
+    );
+    assert!(
+        0.5f32
+            .require_in_right_open_range("f", 0.0, f32::NAN)
+            .is_err()
+    );
 
     assert!(0.5f32.require_less("f", 1.0).is_ok());
     assert!(f32::NAN.require_less("f", 1.0).is_err());
