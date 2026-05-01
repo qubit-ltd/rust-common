@@ -17,8 +17,7 @@
 pub mod argument;
 pub mod box_error;
 pub mod converter;
-pub mod data_type;
-pub mod data_type_of;
+pub mod datatype;
 
 pub use box_error::{
     BoxError,
@@ -30,8 +29,11 @@ pub use converter::{
     DataConvertTo,
     DataConverter,
 };
-pub use data_type::DataType;
-pub use data_type_of::DataTypeOf;
+pub use datatype::{
+    DataType,
+    DataTypeOf,
+    DataTypeParseError,
+};
 
 // Re-export commonly used types
 pub use argument::{

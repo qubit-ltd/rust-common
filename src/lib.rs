@@ -64,8 +64,11 @@ pub use lang::{
         DataConvertTo,
         DataConverter,
     },
-    data_type::DataType,
-    data_type_of::DataTypeOf,
+    datatype::{
+        DataType,
+        DataTypeOf,
+        DataTypeParseError,
+    },
 };
 
 // Re-export utility types

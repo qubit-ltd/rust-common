@@ -14,10 +14,11 @@
 //!
 //! Haixing Hu
 
-use parse_display::{
-    Display,
-    FromStr as DeriveFromStr,
-};
+use std::fmt;
+use std::str::FromStr;
+
+use super::data_type_parse_error::DataTypeParseError;
+
 use serde::{
     Deserialize,
     Serialize,
@@ -95,11 +96,7 @@ use serde::{
 ///
 /// Haixing Hu
 ///
-#[derive(
-    Debug, Clone, Copy, PartialEq, Eq, Hash, Display, DeriveFromStr, Serialize, Deserialize,
-)]
-#[display(style = "lowercase")]
-#[from_str(regex = "(?i)(?P<>)")]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum DataType {
     /// Boolean type
@@ -156,6 +153,49 @@ pub enum DataType {
     StringMap,
     /// JSON value type (serde_json::Value)
     Json,
+}
+
+impl fmt::Display for DataType {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(self.as_str())
+    }
+}
+
+impl FromStr for DataType {
+    type Err = DataTypeParseError;
+
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        match value.to_ascii_lowercase().as_str() {
+            "bool" => Ok(DataType::Bool),
+            "char" => Ok(DataType::Char),
+            "int8" => Ok(DataType::Int8),
+            "int16" => Ok(DataType::Int16),
+            "int32" => Ok(DataType::Int32),
+            "int64" => Ok(DataType::Int64),
+            "int128" => Ok(DataType::Int128),
+            "uint8" => Ok(DataType::UInt8),
+            "uint16" => Ok(DataType::UInt16),
+            "uint32" => Ok(DataType::UInt32),
+            "uint64" => Ok(DataType::UInt64),
+            "uint128" => Ok(DataType::UInt128),
+            "float32" => Ok(DataType::Float32),
+            "float64" => Ok(DataType::Float64),
+            "string" => Ok(DataType::String),
+            "date" => Ok(DataType::Date),
+            "time" => Ok(DataType::Time),
+            "datetime" => Ok(DataType::DateTime),
+            "instant" => Ok(DataType::Instant),
+            "biginteger" => Ok(DataType::BigInteger),
+            "bigdecimal" => Ok(DataType::BigDecimal),
+            "intsize" => Ok(DataType::IntSize),
+            "uintsize" => Ok(DataType::UIntSize),
+            "duration" => Ok(DataType::Duration),
+            "url" => Ok(DataType::Url),
+            "stringmap" => Ok(DataType::StringMap),
+            "json" => Ok(DataType::Json),
+            _ => Err(DataTypeParseError::new(value)),
+        }
+    }
 }
 
 impl DataType {

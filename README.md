@@ -19,7 +19,7 @@ Qubit Common is designed to provide essential language-level utilities that are 
 - **Universal Data Type Enum**: Comprehensive `DataType` enum supporting all basic Rust types and common third-party types
 - **Compile-time Type Mapping**: `DataTypeOf` trait for compile-time type-to-data-type queries
 - **Serialization Support**: Built-in JSON/YAML serialization for all data types
-- **Type Validation**: Runtime type checking and conversion utilities
+- **Data Conversion**: Reusable `DataConverter` for converting runtime values between supported `DataType`-backed Rust types
 
 ### 🛡️ **Argument Validation**
 - **Numeric Validation**: Range checks, equality comparisons, and bounds validation
@@ -39,7 +39,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-qubit-common = "0.6.0"
+qubit-common = "0.7.0"
 ```
 
 ## Quick Start
@@ -61,6 +61,26 @@ assert_eq!(String::DATA_TYPE, DataType::String);
 let json = serde_json::to_string(&DataType::Float64).unwrap();
 assert_eq!(json, "\"float64\"");
 ```
+
+### Data Conversion
+
+```rust
+use std::time::Duration;
+
+use qubit_common::lang::converter::{DataConversionResult, DataConverter};
+
+fn read_settings() -> DataConversionResult<(u16, bool, Duration)> {
+    let port = DataConverter::from("8080").to::<u16>()?;
+    let enabled = DataConverter::from("true").to::<bool>()?;
+    let timeout = DataConverter::from("1500000000ns").to::<Duration>()?;
+
+    Ok((port, enabled, timeout))
+}
+```
+
+`DataConverter` is a lightweight source-value wrapper. It accepts borrowed or
+owned inputs through `From` implementations and returns `DataConversionError`
+when a conversion is unsupported, empty, invalid, or out of range.
 
 ### Argument Validation
 
@@ -143,6 +163,11 @@ The [`DataType`](https://docs.rs/qubit-common/latest/qubit_common/lang/enum.Data
 - [`DataType`](https://docs.rs/qubit-common/latest/qubit_common/lang/enum.DataType.html) - Universal data type enumeration
 - [`DataTypeOf`](https://docs.rs/qubit-common/latest/qubit_common/lang/trait.DataTypeOf.html) - Compile-time type mapping trait
 
+### Data Conversion
+- [`DataConverter`](https://docs.rs/qubit-common/latest/qubit_common/lang/converter/enum.DataConverter.html) - Runtime value conversion wrapper
+- [`DataConversionError`](https://docs.rs/qubit-common/latest/qubit_common/lang/converter/enum.DataConversionError.html) - Error type for unsupported or invalid conversions
+- [`DataConversionResult`](https://docs.rs/qubit-common/latest/qubit_common/lang/converter/type.DataConversionResult.html) - Result alias returned by conversion APIs
+
 ### Argument Validation
 - [`NumericArgument`](https://docs.rs/qubit-common/latest/qubit_common/lang/argument/trait.NumericArgument.html) - Numeric validation methods
 - [`StringArgument`](https://docs.rs/qubit-common/latest/qubit_common/lang/argument/trait.StringArgument.html) - String validation methods
@@ -181,6 +206,7 @@ match validate_input(value) {
 - **bigdecimal**: Arbitrary precision decimal arithmetic
 - **chrono**: Date and time handling
 - **num-bigint**: Big integer support
+- **num-traits**: Numeric conversion support
 - **regex**: Pattern matching
 - **url**: Parsed URL type (`url::Url`) bound to `DataType::Url`
 

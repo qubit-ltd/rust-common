@@ -22,4 +22,4 @@ mod argument {
 
 // Data type tests
 mod converter;
-mod data_type_tests;
+mod datatype;
