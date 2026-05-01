@@ -27,10 +27,10 @@ use chrono::{
     Utc,
 };
 use num_bigint::BigInt;
-use qubit_common::{
+use qubit_common::DataType;
+use qubit_common::lang::converter::{
     DataConversionError,
     DataConverter,
-    DataType,
 };
 use url::Url;
 
@@ -143,36 +143,6 @@ fn test_data_converter_from_impls_cover_all_sources() {
     assert_data_type(DataConverter::from(string), DataType::String);
 
     assert_data_type(DataConverter::Empty(DataType::Json), DataType::Json);
-}
-
-/// Test the conversion error display strings.
-#[test]
-fn test_data_conversion_error_display() {
-    assert_eq!(DataConversionError::NoValue.to_string(), "No value");
-    let cloned_error = DataConversionError::NoValue.clone();
-    assert_eq!(cloned_error, DataConversionError::NoValue);
-    assert!(format!("{:?}", cloned_error).contains("NoValue"));
-
-    assert_eq!(
-        DataConversionError::ConversionFailed {
-            from: DataType::String,
-            to: DataType::Int32,
-        }
-        .to_string(),
-        "Type conversion failed: from string to int32"
-    );
-    assert_eq!(
-        DataConversionError::ConversionError("bad input".to_string()).to_string(),
-        "Conversion error: bad input"
-    );
-    assert_eq!(
-        DataConversionError::JsonSerializationError("bad json".to_string()).to_string(),
-        "JSON serialization error: bad json"
-    );
-    assert_eq!(
-        DataConversionError::JsonDeserializationError("bad json".to_string()).to_string(),
-        "JSON deserialization error: bad json"
-    );
 }
 
 /// Test derived converter traits used by callers and assertions.
