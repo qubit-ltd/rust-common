@@ -1,6 +1,6 @@
 [package]
 name = "qubit-common"
-version = "0.6.3"
+version = "0.7.0"
 edition = "2024"
 rust-version = "1.94"
 authors = ["Haixing Hu <starfish.hu@gmail.com>"]
@@ -30,6 +30,7 @@ doctest = true
 bigdecimal = "0.4"
 chrono = { version = "0.4", features = ["serde"] }
 num-bigint = "0.4"
+num-traits = "0.2"
 regex = "1.0"
 parse-display = "0.7"
 serde = { version = "1.0", features = ["derive"] }

@@ -58,6 +58,12 @@ pub use lang::{
         BoxError,
         BoxResult,
     },
+    data_converter::{
+        DataConversionError,
+        DataConversionResult,
+        DataConvertTo,
+        DataConverter,
+    },
     data_type::DataType,
     data_type_of::DataTypeOf,
 };

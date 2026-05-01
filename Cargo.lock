@@ -398,11 +398,12 @@ dependencies = [
 
 [[package]]
 name = "qubit-common"
-version = "0.6.3"
+version = "0.7.0"
 dependencies = [
  "bigdecimal",
  "chrono",
  "num-bigint",
+ "num-traits",
  "parse-display",
  "regex",
  "serde",

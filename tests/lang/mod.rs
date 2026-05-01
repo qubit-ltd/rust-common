@@ -21,4 +21,5 @@ mod argument {
 }
 
 // Data type tests
+mod data_converter_tests;
 mod data_type_tests;
