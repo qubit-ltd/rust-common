@@ -30,6 +30,7 @@ Qubit Common is designed to provide essential language-level utilities that are 
 
 ### 🎯 **Core Utilities**
 - **Error Handling**: Comprehensive error types with detailed context
+- **Boxed Error Helpers**: `BoxError`, `BoxResult`, `DynError`, and `IntoBoxError` for type-erased integration errors
 - **State Validation**: Application state checking and validation
 - **Condition Checking**: Flexible condition and assertion utilities
 
@@ -135,6 +136,32 @@ fn process_data(value: i32, items: &[String]) -> ArgumentResult<()> {
 }
 ```
 
+### Boxed Error Helpers
+
+`BoxError` and `BoxResult<T>` are convenience aliases for places where the
+concrete error type is intentionally erased, such as callbacks, small executable
+entry points, integration glue, and stored source errors. `DynError` names the
+shared `dyn Error + Send + Sync + 'static` object bounds, while `IntoBoxError`
+provides an explicit conversion method for `map_err` and manual `Err`
+construction.
+
+Prefer concrete error types for public APIs where callers need structured
+recovery. Use boxed helpers when the caller only needs to propagate, log, or
+store the original source error.
+
+```rust
+use qubit_common::lang::error::{BoxResult, IntoBoxError};
+
+fn parse_port(text: &str) -> BoxResult<u16> {
+    text.parse::<u16>()
+        .map_err(|error| error.into_box_error())
+}
+
+let port = parse_port("8080").expect("valid port should parse");
+assert_eq!(port, 8080);
+assert!(parse_port("not-a-port").is_err());
+```
+
 ## Supported Data Types
 
 The [`DataType`](https://docs.rs/qubit-common/latest/qubit_common/lang/enum.DataType.html) enum lists every variant; string forms use `as_str()` (for example `int32`, `instant`, `stringmap`). Types below also note [`DataTypeOf`](https://docs.rs/qubit-common/latest/qubit_common/lang/trait.DataTypeOf.html) where implemented.
@@ -179,23 +206,32 @@ The [`DataType`](https://docs.rs/qubit-common/latest/qubit_common/lang/enum.Data
 - [`check_state`](https://docs.rs/qubit-common/latest/qubit_common/lang/argument/fn.check_state.html) - State validation
 - [`check_bounds`](https://docs.rs/qubit-common/latest/qubit_common/lang/argument/fn.check_bounds.html) - Bounds checking
 
+### Error Helpers
+- [`DynError`](https://docs.rs/qubit-common/latest/qubit_common/lang/error/type.DynError.html) - Shared dynamic error object bounds
+- [`BoxError`](https://docs.rs/qubit-common/latest/qubit_common/lang/error/type.BoxError.html) - Owned boxed dynamic error
+- [`BoxResult`](https://docs.rs/qubit-common/latest/qubit_common/lang/error/type.BoxResult.html) - Result alias using `BoxError`
+- [`IntoBoxError`](https://docs.rs/qubit-common/latest/qubit_common/lang/error/trait.IntoBoxError.html) - Explicit conversion trait for boxing concrete errors
+
 ## Error Handling
 
-All validation functions return `ArgumentResult<T>`, which is an alias for `Result<T, ArgumentError>`. The `ArgumentError` type provides detailed error information including:
-
-- Error message
-- Parameter name
-- Expected vs actual values
-- Context information
+Argument validation functions return `ArgumentResult<T>`, which is an alias for
+`Result<T, ArgumentError>`. `ArgumentError` stores a human-readable validation
+message and implements the standard error traits.
 
 ```rust
 use qubit_common::lang::argument::{ArgumentError, ArgumentResult};
 
-match validate_input(value) {
-    Ok(result) => println!("Validation passed: {:?}", result),
-    Err(ArgumentError::InvalidArgument { param, message }) => {
-        eprintln!("Invalid argument '{}': {}", param, message);
+fn validate_input(value: i32) -> ArgumentResult<i32> {
+    if value > 0 {
+        Ok(value)
+    } else {
+        Err(ArgumentError::new("value must be positive"))
     }
+}
+
+match validate_input(0) {
+    Ok(result) => println!("Validation passed: {result}"),
+    Err(error) => eprintln!("Validation failed: {error}"),
 }
 ```
 

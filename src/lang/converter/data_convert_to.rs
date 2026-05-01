@@ -9,6 +9,10 @@
 //! # Data Conversion Trait
 //!
 //! Defines the target-type conversion trait implemented by `DataConverter`.
+//!
+//! # Author
+//!
+//! Haixing Hu
 
 use super::data_conversion_result::DataConversionResult;
 

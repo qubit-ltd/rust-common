@@ -9,6 +9,10 @@
 //! # Reusable Data Conversion
 //!
 //! Provides language-level data conversion utilities based on [`crate::lang::DataType`].
+//!
+//! # Author
+//!
+//! Haixing Hu
 
 mod data_conversion_error;
 mod data_conversion_result;

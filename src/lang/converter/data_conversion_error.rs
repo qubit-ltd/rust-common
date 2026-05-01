@@ -9,6 +9,10 @@
 //! # Data Conversion Error
 //!
 //! Defines errors returned by reusable data conversions.
+//!
+//! # Author
+//!
+//! Haixing Hu
 
 use std::error::Error;
 use std::fmt;

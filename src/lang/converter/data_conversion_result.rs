@@ -9,6 +9,10 @@
 //! # Data Conversion Result
 //!
 //! Defines the result alias used by reusable data conversions.
+//!
+//! # Author
+//!
+//! Haixing Hu
 
 use super::data_conversion_error::DataConversionError;
 
