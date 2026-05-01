@@ -16,7 +16,7 @@
 
 pub mod argument;
 pub mod box_error;
-pub mod data_converter;
+pub mod converter;
 pub mod data_type;
 pub mod data_type_of;
 
@@ -24,7 +24,7 @@ pub use box_error::{
     BoxError,
     BoxResult,
 };
-pub use data_converter::{
+pub use converter::{
     DataConversionError,
     DataConversionResult,
     DataConvertTo,

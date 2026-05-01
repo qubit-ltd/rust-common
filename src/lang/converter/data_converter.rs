@@ -15,11 +15,8 @@
 //!
 //! Haixing Hu
 
-// qubit-style: allow multiple-public-types
-
 use std::borrow::Cow;
 use std::collections::HashMap;
-use std::error::Error;
 use std::fmt;
 use std::time::Duration;
 
@@ -35,59 +32,10 @@ use num_bigint::BigInt;
 use num_traits::ToPrimitive;
 use url::Url;
 
-use super::DataType;
-
-/// Result type used by reusable data conversions.
-pub type DataConversionResult<T> = Result<T, DataConversionError>;
-
-/// Error type returned by reusable data conversions.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum DataConversionError {
-    /// No concrete source value is available.
-    NoValue,
-
-    /// The source value type cannot be converted to the requested target type.
-    ConversionFailed {
-        /// Source data type.
-        from: DataType,
-        /// Target data type.
-        to: DataType,
-    },
-
-    /// Conversion failed because the source value content is invalid or out of
-    /// range for the target type.
-    ConversionError(String),
-
-    /// JSON serialization failed while converting a value to JSON text or a
-    /// JSON value.
-    JsonSerializationError(String),
-
-    /// JSON deserialization failed while parsing JSON text.
-    JsonDeserializationError(String),
-}
-
-impl fmt::Display for DataConversionError {
-    /// Formats the conversion error for user-facing diagnostics.
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            DataConversionError::NoValue => write!(f, "No value"),
-            DataConversionError::ConversionFailed { from, to } => {
-                write!(f, "Type conversion failed: from {from} to {to}")
-            }
-            DataConversionError::ConversionError(message) => {
-                write!(f, "Conversion error: {message}")
-            }
-            DataConversionError::JsonSerializationError(message) => {
-                write!(f, "JSON serialization error: {message}")
-            }
-            DataConversionError::JsonDeserializationError(message) => {
-                write!(f, "JSON deserialization error: {message}")
-            }
-        }
-    }
-}
-
-impl Error for DataConversionError {}
+use super::data_conversion_error::DataConversionError;
+use super::data_conversion_result::DataConversionResult;
+use super::data_convert_to::DataConvertTo;
+use crate::lang::DataType;
 
 /// A lightweight wrapper for converting common data values.
 ///
@@ -226,21 +174,6 @@ impl DataConverter<'_> {
             to: target_type,
         }
     }
-}
-
-/// Trait implemented by `DataConverter` for each supported target type.
-pub trait DataConvertTo<T> {
-    /// Converts the source value to `T`.
-    ///
-    /// # Returns
-    ///
-    /// Returns the converted target value.
-    ///
-    /// # Errors
-    ///
-    /// Returns a [`DataConversionError`] when the conversion is unsupported,
-    /// the source value is empty, or the source content is invalid for `T`.
-    fn convert(&self) -> DataConversionResult<T>;
 }
 
 macro_rules! impl_from_copy {

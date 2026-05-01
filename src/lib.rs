@@ -58,7 +58,7 @@ pub use lang::{
         BoxError,
         BoxResult,
     },
-    data_converter::{
+    converter::{
         DataConversionError,
         DataConversionResult,
         DataConvertTo,
