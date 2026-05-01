@@ -54,10 +54,6 @@ pub use lang::{
         // Option functions
         require_null_or,
     },
-    box_error::{
-        BoxError,
-        BoxResult,
-    },
     converter::{
         DataConversionError,
         DataConversionResult,
@@ -68,6 +64,12 @@ pub use lang::{
         DataType,
         DataTypeOf,
         DataTypeParseError,
+    },
+    error::{
+        BoxError,
+        BoxResult,
+        DynError,
+        IntoBoxError,
     },
 };
 

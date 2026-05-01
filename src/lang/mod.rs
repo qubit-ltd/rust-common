@@ -15,14 +15,10 @@
 //! Haixing Hu
 
 pub mod argument;
-pub mod box_error;
 pub mod converter;
 pub mod datatype;
+pub mod error;
 
-pub use box_error::{
-    BoxError,
-    BoxResult,
-};
 pub use converter::{
     DataConversionError,
     DataConversionResult,
@@ -33,6 +29,12 @@ pub use datatype::{
     DataType,
     DataTypeOf,
     DataTypeParseError,
+};
+pub use error::{
+    BoxError,
+    BoxResult,
+    DynError,
+    IntoBoxError,
 };
 
 // Re-export commonly used types

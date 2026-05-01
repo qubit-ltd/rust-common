@@ -23,3 +23,4 @@ mod argument {
 // Data type tests
 mod converter;
 mod datatype;
+mod error;
