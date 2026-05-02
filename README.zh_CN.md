@@ -7,6 +7,15 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![English Document](https://img.shields.io/badge/Document-English-blue.svg)](README.md)
 
+> [!WARNING]
+> 此 crate 已废弃，不再建议在新代码中使用。
+> 原有功能已经拆分为四个更聚焦的 crate：
+> [`qubit-datatype`](https://crates.io/crates/qubit-datatype) 提供 `DataType`、`DataTypeOf` 和类型转换工具；
+> [`qubit-argument`](https://crates.io/crates/qubit-argument) 提供参数验证；
+> [`qubit-error`](https://crates.io/crates/qubit-error) 提供 boxed error 相关工具；
+> [`qubit-serde`](https://crates.io/crates/qubit-serde) 提供可复用 serde 适配器。
+> 请直接依赖这些 crate，而不是继续依赖 `qubit-common`。
+
 为 Qubit 相关项目提供语言级基础工具和数据类型支持的综合性 Rust 工具库。
 
 ## 概述

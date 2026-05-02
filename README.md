@@ -7,6 +7,15 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![中文文档](https://img.shields.io/badge/文档-中文版-blue.svg)](README.zh_CN.md)
 
+> [!WARNING]
+> This crate is deprecated and is no longer recommended for new code.
+> The original functionality has been split into four focused crates:
+> [`qubit-datatype`](https://crates.io/crates/qubit-datatype) for `DataType`, `DataTypeOf`, and conversion utilities;
+> [`qubit-argument`](https://crates.io/crates/qubit-argument) for argument validation;
+> [`qubit-error`](https://crates.io/crates/qubit-error) for boxed error helpers;
+> and [`qubit-serde`](https://crates.io/crates/qubit-serde) for reusable serde adapters.
+> Please depend on those crates directly instead of `qubit-common`.
+
 A comprehensive Rust utility library providing language-level fundamental tools and data type support for Qubit projects.
 
 ## Overview
