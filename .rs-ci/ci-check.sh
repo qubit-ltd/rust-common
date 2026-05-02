@@ -26,7 +26,7 @@ NC='\033[0m'
 TEMP_FILES=()
 cleanup() {
     local file
-    for file in "${TEMP_FILES[@]-}"; do
+    for file in "${TEMP_FILES[@]}"; do
         [ -n "$file" ] && [ -f "$file" ] && command rm -f "$file"
     done
 }
