@@ -59,6 +59,9 @@ pub use lang::{
         DataConversionResult,
         DataConvertTo,
         DataConverter,
+        DataConverters,
+        DataListConversionError,
+        DataListConversionResult,
     },
     datatype::{
         DataType,

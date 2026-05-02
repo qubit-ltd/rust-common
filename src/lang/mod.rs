@@ -24,6 +24,9 @@ pub use converter::{
     DataConversionResult,
     DataConvertTo,
     DataConverter,
+    DataConverters,
+    DataListConversionError,
+    DataListConversionResult,
 };
 pub use datatype::{
     DataType,
