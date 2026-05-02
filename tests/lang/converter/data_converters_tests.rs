@@ -16,10 +16,12 @@
 
 use std::error::Error;
 
-use num_bigint::BigInt;
 use qubit_common::lang::converter::{
+    BlankStringPolicy,
     DataConversionError,
+    DataConversionOptions,
     DataConverters,
+    StringConversionOptions,
 };
 
 /// Test batch conversion from a borrowed vector without moving the source.
@@ -38,47 +40,63 @@ fn test_data_converters_from_borrowed_vec_converts_all_values() {
 /// Test batch conversion from a borrowed slice.
 #[test]
 fn test_data_converters_from_slice_converts_all_values() {
-    let values = [1i32, 2, 3];
+    let values = ["1".to_string(), "2".to_string(), "3".to_string()];
 
-    let converted: Vec<i64> = DataConverters::from(values.as_slice())
+    let converted: Vec<u16> = DataConverters::from(values.as_slice())
         .to_vec()
-        .expect("i32 slice should convert to i64 vector");
+        .expect("string slice should convert to u16 vector");
 
-    assert_eq!(converted, vec![1i64, 2, 3]);
+    assert_eq!(converted, vec![1, 2, 3]);
 }
 
 /// Test batch conversion from an owned vector.
 #[test]
 fn test_data_converters_from_owned_vec_converts_all_values() {
-    let values = vec![1i32, 2, 3];
+    let values = vec!["1".to_string(), "2".to_string(), "3".to_string()];
 
-    let converted: Vec<String> = DataConverters::from(values)
+    let converted: Vec<u16> = DataConverters::from(values)
         .to_vec()
-        .expect("owned i32 vector should convert to string vector");
+        .expect("owned string vector should convert to u16 vector");
 
-    assert_eq!(converted, vec!["1", "2", "3"]);
+    assert_eq!(converted, vec![1, 2, 3]);
 }
 
 /// Test batch conversion from an iterator.
 #[test]
 fn test_data_converters_from_iterator_converts_all_values() {
-    let values = ["1", "0", "true", "FALSE"];
+    let values = ["1", "2", "3"];
 
-    let converted: Vec<bool> = DataConverters::from_iterator(values.iter().copied())
+    let converted: Vec<u16> = DataConverters::from_iterator(values.iter().copied())
         .to_vec()
-        .expect("string iterator should convert to bool vector");
+        .expect("string iterator should convert to u16 vector");
 
-    assert_eq!(converted, vec![true, false, true, false]);
+    assert_eq!(converted, vec![1, 2, 3]);
+}
+
+/// Test configurable batch conversion.
+#[test]
+fn test_data_converters_to_vec_with_applies_options() {
+    let options = DataConversionOptions::default().with_string_options(
+        StringConversionOptions::default()
+            .with_trim(true)
+            .with_blank_string_policy(BlankStringPolicy::Reject),
+    );
+
+    let ports: Vec<u16> = DataConverters::from(vec![" 8080 ".to_string(), " 8081 ".to_string()])
+        .to_vec_with(&options)
+        .expect("trimmed string values should parse into ports");
+
+    assert_eq!(ports, vec![8080, 8081]);
 }
 
 /// Test first-value conversion from a borrowed vector.
 #[test]
 fn test_data_converters_to_first_converts_first_value() {
-    let values = vec![BigInt::from(42), BigInt::from(100)];
+    let values = vec!["42".to_string(), "100".to_string()];
 
-    let first: i32 = DataConverters::from(&values)
+    let first: u16 = DataConverters::from(&values)
         .to_first()
-        .expect("first BigInt should convert to i32");
+        .expect("first string should convert to u16");
 
     assert_eq!(first, 42);
 }

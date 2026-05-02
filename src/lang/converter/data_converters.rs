@@ -19,6 +19,7 @@
 use std::marker::PhantomData;
 
 use super::data_conversion_error::DataConversionError;
+use super::data_conversion_options::DataConversionOptions;
 use super::data_conversion_result::DataConversionResult;
 use super::data_convert_to::DataConvertTo;
 use super::data_converter::DataConverter;
@@ -30,6 +31,25 @@ use super::data_list_conversion_result::DataListConversionResult;
 /// `DataConverters` stores an iterator and converts each item through
 /// [`DataConverter`]. Borrowed inputs such as `&Vec<T>` and `&[T]` are converted
 /// by reference and do not clone the source collection.
+///
+/// # Examples
+///
+/// ```
+/// use qubit_common::lang::converter::{
+///     DataConverters,
+///     DataListConversionResult,
+/// };
+///
+/// fn parse_ports(values: &[String]) -> DataListConversionResult<Vec<u16>> {
+///     DataConverters::from(values).to_vec()
+/// }
+///
+/// let values = vec![String::from("8080"), String::from("9090")];
+/// let ports = parse_ports(&values).expect("all port values should convert");
+///
+/// assert_eq!(ports, vec![8080, 9090]);
+/// assert_eq!(values, vec![String::from("8080"), String::from("9090")]);
+/// ```
 ///
 /// # Author
 ///
@@ -86,17 +106,59 @@ where
     ///
     /// Returns [`DataListConversionError`] with the zero-based failing index and
     /// the original [`DataConversionError`] when any element fails conversion.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use qubit_common::lang::converter::DataConverters;
+    ///
+    /// let values = ["1", "0", "true", "FALSE"];
+    /// let flags: Vec<bool> = DataConverters::from_iterator(values.iter().copied())
+    ///     .to_vec()
+    ///     .expect("all flag values should convert");
+    ///
+    /// assert_eq!(flags, vec![true, false, true, false]);
+    /// ```
     pub fn to_vec<T>(self) -> DataListConversionResult<Vec<T>>
     where
         DataConverter<'a>: DataConvertTo<T>,
     {
-        let (capacity, _) = self.sources.size_hint();
+        self.to_vec_with(&DataConversionOptions::default())
+    }
+
+    /// Converts every source item to the requested target type using options.
+    ///
+    /// # Type Parameters
+    ///
+    /// * `T` - Target element type.
+    ///
+    /// # Parameters
+    ///
+    /// * `options` - Conversion options used for each element.
+    ///
+    /// # Returns
+    ///
+    /// Returns converted values in source order. Empty sources return an empty
+    /// vector.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`DataListConversionError`] with the zero-based failing index and
+    /// the original [`DataConversionError`] when any element fails conversion.
+    pub fn to_vec_with<T>(self, options: &DataConversionOptions) -> DataListConversionResult<Vec<T>>
+    where
+        DataConverter<'a>: DataConvertTo<T>,
+    {
+        let sources = self.sources;
+        let (capacity, _) = sources.size_hint();
         let mut converted = Vec::with_capacity(capacity);
-        for (index, source) in self.sources.enumerate() {
-            let value = source
-                .into()
-                .to::<T>()
-                .map_err(|e| DataListConversionError { index, source: e })?;
+        for (index, source) in sources.enumerate() {
+            let value = match source.into().to_with::<T>(options) {
+                Ok(value) => value,
+                Err(source) => {
+                    return Err(DataListConversionError { index, source });
+                }
+            };
             converted.push(value);
         }
         Ok(converted)
@@ -117,12 +179,52 @@ where
     /// Returns [`DataConversionError::NoValue`] when the source iterator is
     /// empty, or the original single-value conversion error when the first
     /// element cannot be converted.
-    pub fn to_first<T>(mut self) -> DataConversionResult<T>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use qubit_common::lang::converter::DataConverters;
+    ///
+    /// let values = vec![String::from("42"), String::from("100")];
+    /// let first: i32 = DataConverters::from(&values)
+    ///     .to_first()
+    ///     .expect("first value should convert to i32");
+    ///
+    /// assert_eq!(first, 42);
+    /// ```
+    pub fn to_first<T>(self) -> DataConversionResult<T>
     where
         DataConverter<'a>: DataConvertTo<T>,
     {
-        match self.sources.next() {
-            Some(source) => source.into().to::<T>(),
+        self.to_first_with(&DataConversionOptions::default())
+    }
+
+    /// Converts the first source item to the requested target type using options.
+    ///
+    /// # Type Parameters
+    ///
+    /// * `T` - Target type.
+    ///
+    /// # Parameters
+    ///
+    /// * `options` - Conversion options used for parsing.
+    ///
+    /// # Returns
+    ///
+    /// Returns the converted first value.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`DataConversionError::NoValue`] when the source iterator is
+    /// empty, or the original conversion error when the first element cannot be
+    /// converted.
+    pub fn to_first_with<T>(self, options: &DataConversionOptions) -> DataConversionResult<T>
+    where
+        DataConverter<'a>: DataConvertTo<T>,
+    {
+        let mut sources = self.sources;
+        match sources.next() {
+            Some(source) => source.into().to_with::<T>(options),
             None => Err(DataConversionError::NoValue),
         }
     }

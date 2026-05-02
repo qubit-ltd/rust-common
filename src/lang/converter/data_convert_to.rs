@@ -14,11 +14,16 @@
 //!
 //! Haixing Hu
 
+use super::data_conversion_options::DataConversionOptions;
 use super::data_conversion_result::DataConversionResult;
 
 /// Trait implemented by `DataConverter` for each supported target type.
 pub trait DataConvertTo<T> {
     /// Converts the source value to `T`.
+    ///
+    /// # Parameters
+    ///
+    /// * `options` - Conversion options used for parsing source content.
     ///
     /// # Returns
     ///
@@ -29,5 +34,5 @@ pub trait DataConvertTo<T> {
     /// Returns a [`super::DataConversionError`] when the conversion is
     /// unsupported, the source value is empty, or the source content is invalid
     /// for `T`.
-    fn convert(&self) -> DataConversionResult<T>;
+    fn convert(&self, options: &DataConversionOptions) -> DataConversionResult<T>;
 }

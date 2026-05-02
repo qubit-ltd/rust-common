@@ -758,6 +758,11 @@ fn test_data_converter_float_conversions_check_non_finite_and_overflow() {
         DataConverter::from(f64::MAX).to::<f32>(),
         Err(DataConversionError::ConversionError(_))
     ));
+
+    assert!(matches!(
+        DataConverter::from(u128::MAX).to::<f32>(),
+        Err(DataConversionError::ConversionError(_))
+    ));
 }
 
 /// Test BigInt and BigDecimal conversions and range failures.

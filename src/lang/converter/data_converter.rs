@@ -33,6 +33,7 @@ use num_traits::ToPrimitive;
 use url::Url;
 
 use super::data_conversion_error::DataConversionError;
+use super::data_conversion_options::DataConversionOptions;
 use super::data_conversion_result::DataConversionResult;
 use super::data_convert_to::DataConvertTo;
 use crate::lang::DataType;
@@ -42,6 +43,34 @@ use crate::lang::DataType;
 /// `DataConverter` borrows source values when possible and owns them only when
 /// created from owned inputs such as `String`, `BigInt`, or `serde_json::Value`.
 /// It does not depend on higher-level value containers.
+///
+/// # Examples
+///
+/// ```
+/// use std::time::Duration;
+///
+/// use qubit_common::lang::converter::{
+///     DataConversionResult,
+///     DataConverter,
+/// };
+///
+/// fn read_timeout() -> DataConversionResult<Duration> {
+///     DataConverter::from("1500000000ns").to::<Duration>()
+/// }
+///
+/// let timeout = read_timeout().expect("duration text should convert");
+/// assert_eq!(timeout, Duration::new(1, 500_000_000));
+///
+/// let port: u16 = DataConverter::from("8080")
+///     .to()
+///     .expect("port text should convert to u16");
+/// assert_eq!(port, 8080);
+///
+/// let enabled: bool = DataConverter::from("true")
+///     .to()
+///     .expect("boolean text should convert to bool");
+/// assert!(enabled);
+/// ```
 #[derive(Debug, Clone, PartialEq)]
 pub enum DataConverter<'a> {
     /// Empty source with a known data type.
@@ -124,7 +153,37 @@ impl DataConverter<'_> {
     where
         Self: DataConvertTo<T>,
     {
-        <Self as DataConvertTo<T>>::convert(self)
+        self.to_with(&DataConversionOptions::default())
+    }
+
+    /// Converts this source value to the requested target type using options.
+    ///
+    /// # Type Parameters
+    ///
+    /// * `T` - Target type to convert to.
+    ///
+    /// # Parameters
+    ///
+    /// * `options` - Conversion options used for string, boolean, and
+    ///   collection-related parsing.
+    ///
+    /// # Returns
+    ///
+    /// Returns the converted value when the conversion is supported and the
+    /// source value is valid for the target type.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`DataConversionError::NoValue`] for empty or option-defined
+    /// missing sources, [`DataConversionError::ConversionFailed`] for
+    /// unsupported source-target pairs, or a detailed conversion error for
+    /// invalid source content.
+    #[inline]
+    pub fn to_with<T>(&self, options: &DataConversionOptions) -> DataConversionResult<T>
+    where
+        Self: DataConvertTo<T>,
+    {
+        <Self as DataConvertTo<T>>::convert(self, options)
     }
 
     /// Returns the data type represented by this source value.
@@ -264,13 +323,11 @@ impl<'a> From<String> for DataConverter<'a> {
     }
 }
 
-/// Parses a string using the bool conversion rules.
-fn parse_bool_string(value: &str) -> DataConversionResult<bool> {
-    let trimmed = value.trim();
-    if trimmed == "1" || trimmed.eq_ignore_ascii_case("true") {
-        Ok(true)
-    } else if trimmed == "0" || trimmed.eq_ignore_ascii_case("false") {
-        Ok(false)
+/// Parses a string using the configured bool conversion rules.
+fn parse_bool_string(value: &str, options: &DataConversionOptions) -> DataConversionResult<bool> {
+    let value = options.string.normalize(value)?;
+    if let Some(parsed) = options.boolean.parse(&value) {
+        Ok(parsed)
     } else {
         Err(DataConversionError::ConversionError(format!(
             "Cannot convert '{value}' to boolean"
@@ -279,7 +336,11 @@ fn parse_bool_string(value: &str) -> DataConversionResult<bool> {
 }
 
 /// Parses a string using the duration conversion rules.
-fn parse_duration_string(value: &str) -> DataConversionResult<Duration> {
+fn parse_duration_string(
+    value: &str,
+    options: &DataConversionOptions,
+) -> DataConversionResult<Duration> {
+    let value = options.string.normalize(value)?;
     let trimmed = value.trim();
     let nanos_text = trimmed.strip_suffix("ns").ok_or_else(|| {
         DataConversionError::ConversionError(format!(
@@ -351,6 +412,18 @@ fn checked_bigdecimal_to_f32(value: &BigDecimal) -> DataConversionResult<f32> {
     }
 }
 
+/// Converts a `u128` to `f32` and rejects values that overflow to infinity.
+fn checked_u128_to_f32(value: u128) -> DataConversionResult<f32> {
+    let converted = value as f32;
+    if converted.is_finite() {
+        Ok(converted)
+    } else {
+        Err(DataConversionError::ConversionError(
+            "u128 value out of f32 range".to_string(),
+        ))
+    }
+}
+
 /// Converts a `BigInt` to `f64` and rejects infinite conversion results.
 fn checked_bigint_to_f64(value: &BigInt) -> DataConversionResult<f64> {
     let converted = value.to_f64().unwrap_or(f64::INFINITY);
@@ -378,6 +451,7 @@ fn checked_bigdecimal_to_f64(value: &BigDecimal) -> DataConversionResult<f64> {
 /// Converts source values accepted by signed integer targets to `i128`.
 fn convert_to_signed_integer(
     source: &DataConverter<'_>,
+    options: &DataConversionOptions,
     target_type: DataType,
     target: &str,
 ) -> DataConversionResult<i128> {
@@ -401,12 +475,16 @@ fn convert_to_signed_integer(
         DataConverter::UIntSize(value) => Ok(*value as i128),
         DataConverter::Float32(value) => checked_float_to_i128(*value as f64, "f32", target),
         DataConverter::Float64(value) => checked_float_to_i128(*value, "f64", target),
-        DataConverter::String(value) => value.parse::<i128>().map_err(|_| {
-            DataConversionError::ConversionError(format!(
-                "Cannot convert '{}' to {target}",
-                value.as_ref()
-            ))
-        }),
+        DataConverter::String(value) => options
+            .string
+            .normalize(value.as_ref())?
+            .parse::<i128>()
+            .map_err(|_| {
+                DataConversionError::ConversionError(format!(
+                    "Cannot convert '{}' to {target}",
+                    value.as_ref()
+                ))
+            }),
         DataConverter::BigInteger(value) => value.as_ref().to_i128().ok_or_else(|| {
             DataConversionError::ConversionError(format!("BigInteger value out of {target} range"))
         }),
@@ -423,6 +501,7 @@ fn convert_to_signed_integer(
 /// Converts source values accepted by unsigned integer targets to `u128`.
 fn convert_to_unsigned_integer(
     source: &DataConverter<'_>,
+    options: &DataConversionOptions,
     target_type: DataType,
     target: &str,
 ) -> DataConversionResult<u128> {
@@ -459,12 +538,16 @@ fn convert_to_unsigned_integer(
         DataConverter::UInt64(value) => Ok((*value).into()),
         DataConverter::UInt128(value) => Ok(*value),
         DataConverter::UIntSize(value) => Ok(*value as u128),
-        DataConverter::String(value) => value.parse::<u128>().map_err(|_| {
-            DataConversionError::ConversionError(format!(
-                "Cannot convert '{}' to {target}",
-                value.as_ref()
-            ))
-        }),
+        DataConverter::String(value) => options
+            .string
+            .normalize(value.as_ref())?
+            .parse::<u128>()
+            .map_err(|_| {
+                DataConversionError::ConversionError(format!(
+                    "Cannot convert '{}' to {target}",
+                    value.as_ref()
+                ))
+            }),
         DataConverter::Empty(_) => Err(DataConversionError::NoValue),
         _ => Err(source.unsupported(target_type)),
     }
@@ -472,9 +555,9 @@ fn convert_to_unsigned_integer(
 
 impl DataConvertTo<String> for DataConverter<'_> {
     /// Converts a supported source value to `String`.
-    fn convert(&self) -> DataConversionResult<String> {
+    fn convert(&self, options: &DataConversionOptions) -> DataConversionResult<String> {
         match self {
-            DataConverter::String(value) => Ok(value.to_string()),
+            DataConverter::String(value) => options.string.normalize(value.as_ref()),
             DataConverter::Bool(value) => Ok(value.to_string()),
             DataConverter::Char(value) => Ok(value.to_string()),
             DataConverter::Int8(value) => Ok(value.to_string()),
@@ -518,7 +601,7 @@ impl DataConvertTo<String> for DataConverter<'_> {
 
 impl DataConvertTo<bool> for DataConverter<'_> {
     /// Converts accepted source values to `bool`.
-    fn convert(&self) -> DataConversionResult<bool> {
+    fn convert(&self, options: &DataConversionOptions) -> DataConversionResult<bool> {
         match self {
             DataConverter::Bool(value) => Ok(*value),
             DataConverter::Int8(value) => Ok(*value != 0),
@@ -531,7 +614,7 @@ impl DataConvertTo<bool> for DataConverter<'_> {
             DataConverter::UInt32(value) => Ok(*value != 0),
             DataConverter::UInt64(value) => Ok(*value != 0),
             DataConverter::UInt128(value) => Ok(*value != 0),
-            DataConverter::String(value) => parse_bool_string(value.as_ref()),
+            DataConverter::String(value) => parse_bool_string(value.as_ref(), options),
             DataConverter::Empty(_) => Err(DataConversionError::NoValue),
             _ => Err(self.unsupported(DataType::Bool)),
         }
@@ -540,7 +623,7 @@ impl DataConvertTo<bool> for DataConverter<'_> {
 
 impl DataConvertTo<char> for DataConverter<'_> {
     /// Converts a character source to `char`.
-    fn convert(&self) -> DataConversionResult<char> {
+    fn convert(&self, _options: &DataConversionOptions) -> DataConversionResult<char> {
         match self {
             DataConverter::Char(value) => Ok(*value),
             DataConverter::Empty(_) => Err(DataConversionError::NoValue),
@@ -553,8 +636,11 @@ macro_rules! impl_signed_integer_converter {
     ($target_type:ty, $data_type:expr, $target_name:expr, $min:expr, $max:expr) => {
         impl DataConvertTo<$target_type> for DataConverter<'_> {
             #[inline]
-            fn convert(&self) -> DataConversionResult<$target_type> {
-                let value = convert_to_signed_integer(self, $data_type, $target_name)?;
+            fn convert(
+                &self,
+                options: &DataConversionOptions,
+            ) -> DataConversionResult<$target_type> {
+                let value = convert_to_signed_integer(self, options, $data_type, $target_name)?;
                 let checked = range_check(value, $min as i128, $max as i128, $target_name)?;
                 Ok(checked as $target_type)
             }
@@ -571,8 +657,8 @@ impl_signed_integer_converter!(isize, DataType::IntSize, "isize", isize::MIN, is
 impl DataConvertTo<i128> for DataConverter<'_> {
     /// Converts accepted source values to `i128`.
     #[inline]
-    fn convert(&self) -> DataConversionResult<i128> {
-        convert_to_signed_integer(self, DataType::Int128, "i128")
+    fn convert(&self, options: &DataConversionOptions) -> DataConversionResult<i128> {
+        convert_to_signed_integer(self, options, DataType::Int128, "i128")
     }
 }
 
@@ -580,8 +666,11 @@ macro_rules! impl_unsigned_integer_converter {
     ($target_type:ty, $data_type:expr, $target_name:expr, $max:expr) => {
         impl DataConvertTo<$target_type> for DataConverter<'_> {
             #[inline]
-            fn convert(&self) -> DataConversionResult<$target_type> {
-                let value = convert_to_unsigned_integer(self, $data_type, $target_name)?;
+            fn convert(
+                &self,
+                options: &DataConversionOptions,
+            ) -> DataConversionResult<$target_type> {
+                let value = convert_to_unsigned_integer(self, options, $data_type, $target_name)?;
                 let checked = range_check(
                     value,
                     <$target_type>::MIN as u128,
@@ -603,14 +692,14 @@ impl_unsigned_integer_converter!(usize, DataType::UIntSize, "usize", usize::MAX)
 impl DataConvertTo<u128> for DataConverter<'_> {
     /// Converts accepted source values to `u128`.
     #[inline]
-    fn convert(&self) -> DataConversionResult<u128> {
-        convert_to_unsigned_integer(self, DataType::UInt128, "u128")
+    fn convert(&self, options: &DataConversionOptions) -> DataConversionResult<u128> {
+        convert_to_unsigned_integer(self, options, DataType::UInt128, "u128")
     }
 }
 
 impl DataConvertTo<f32> for DataConverter<'_> {
     /// Converts accepted source values to `f32`.
-    fn convert(&self) -> DataConversionResult<f32> {
+    fn convert(&self, options: &DataConversionOptions) -> DataConversionResult<f32> {
         match self {
             DataConverter::Float32(value) => Ok(*value),
             DataConverter::Float64(value) => {
@@ -633,14 +722,18 @@ impl DataConvertTo<f32> for DataConverter<'_> {
             DataConverter::UInt16(value) => Ok(*value as f32),
             DataConverter::UInt32(value) => Ok(*value as f32),
             DataConverter::UInt64(value) => Ok(*value as f32),
-            DataConverter::UInt128(value) => Ok(*value as f32),
+            DataConverter::UInt128(value) => checked_u128_to_f32(*value),
             DataConverter::UIntSize(value) => Ok(*value as f32),
-            DataConverter::String(value) => value.parse::<f32>().map_err(|_| {
-                DataConversionError::ConversionError(format!(
-                    "Cannot convert '{}' to f32",
-                    value.as_ref()
-                ))
-            }),
+            DataConverter::String(value) => options
+                .string
+                .normalize(value.as_ref())?
+                .parse::<f32>()
+                .map_err(|_| {
+                    DataConversionError::ConversionError(format!(
+                        "Cannot convert '{}' to f32",
+                        value.as_ref()
+                    ))
+                }),
             DataConverter::BigInteger(value) => checked_bigint_to_f32(value.as_ref()),
             DataConverter::BigDecimal(value) => checked_bigdecimal_to_f32(value.as_ref()),
             DataConverter::Empty(_) => Err(DataConversionError::NoValue),
@@ -651,7 +744,7 @@ impl DataConvertTo<f32> for DataConverter<'_> {
 
 impl DataConvertTo<f64> for DataConverter<'_> {
     /// Converts accepted source values to `f64`.
-    fn convert(&self) -> DataConversionResult<f64> {
+    fn convert(&self, options: &DataConversionOptions) -> DataConversionResult<f64> {
         match self {
             DataConverter::Float64(value) => Ok(*value),
             DataConverter::Float32(value) => Ok(*value as f64),
@@ -669,12 +762,16 @@ impl DataConvertTo<f64> for DataConverter<'_> {
             DataConverter::UInt64(value) => Ok(*value as f64),
             DataConverter::UInt128(value) => Ok(*value as f64),
             DataConverter::UIntSize(value) => Ok(*value as f64),
-            DataConverter::String(value) => value.parse::<f64>().map_err(|_| {
-                DataConversionError::ConversionError(format!(
-                    "Cannot convert '{}' to f64",
-                    value.as_ref()
-                ))
-            }),
+            DataConverter::String(value) => options
+                .string
+                .normalize(value.as_ref())?
+                .parse::<f64>()
+                .map_err(|_| {
+                    DataConversionError::ConversionError(format!(
+                        "Cannot convert '{}' to f64",
+                        value.as_ref()
+                    ))
+                }),
             DataConverter::BigInteger(value) => checked_bigint_to_f64(value.as_ref()),
             DataConverter::BigDecimal(value) => checked_bigdecimal_to_f64(value.as_ref()),
             DataConverter::Empty(_) => Err(DataConversionError::NoValue),
@@ -687,7 +784,10 @@ macro_rules! impl_strict_copy_converter {
     ($target_type:ty, $variant:ident, $data_type:expr) => {
         impl DataConvertTo<$target_type> for DataConverter<'_> {
             #[inline]
-            fn convert(&self) -> DataConversionResult<$target_type> {
+            fn convert(
+                &self,
+                _options: &DataConversionOptions,
+            ) -> DataConversionResult<$target_type> {
                 match self {
                     DataConverter::$variant(value) => Ok(*value),
                     DataConverter::Empty(_) => Err(DataConversionError::NoValue),
@@ -702,7 +802,10 @@ macro_rules! impl_strict_cow_converter {
     ($target_type:ty, $variant:ident, $data_type:expr) => {
         impl DataConvertTo<$target_type> for DataConverter<'_> {
             #[inline]
-            fn convert(&self) -> DataConversionResult<$target_type> {
+            fn convert(
+                &self,
+                _options: &DataConversionOptions,
+            ) -> DataConversionResult<$target_type> {
                 match self {
                     DataConverter::$variant(value) => Ok(value.as_ref().clone()),
                     DataConverter::Empty(_) => Err(DataConversionError::NoValue),
@@ -723,10 +826,10 @@ impl_strict_cow_converter!(HashMap<String, String>, StringMap, DataType::StringM
 
 impl DataConvertTo<Duration> for DataConverter<'_> {
     /// Converts accepted source values to [`Duration`].
-    fn convert(&self) -> DataConversionResult<Duration> {
+    fn convert(&self, options: &DataConversionOptions) -> DataConversionResult<Duration> {
         match self {
             DataConverter::Duration(value) => Ok(*value),
-            DataConverter::String(value) => parse_duration_string(value.as_ref()),
+            DataConverter::String(value) => parse_duration_string(value.as_ref(), options),
             DataConverter::Empty(_) => Err(DataConversionError::NoValue),
             _ => Err(self.unsupported(DataType::Duration)),
         }
@@ -735,15 +838,17 @@ impl DataConvertTo<Duration> for DataConverter<'_> {
 
 impl DataConvertTo<Url> for DataConverter<'_> {
     /// Converts accepted source values to [`Url`].
-    fn convert(&self) -> DataConversionResult<Url> {
+    fn convert(&self, options: &DataConversionOptions) -> DataConversionResult<Url> {
         match self {
             DataConverter::Url(value) => Ok(value.as_ref().clone()),
-            DataConverter::String(value) => Url::parse(value.as_ref()).map_err(|error| {
-                DataConversionError::ConversionError(format!(
-                    "Cannot convert '{}' to Url: {error}",
-                    value.as_ref()
-                ))
-            }),
+            DataConverter::String(value) => {
+                let value = options.string.normalize(value.as_ref())?;
+                Url::parse(&value).map_err(|error| {
+                    DataConversionError::ConversionError(format!(
+                        "Cannot convert '{value}' to Url: {error}"
+                    ))
+                })
+            }
             DataConverter::Empty(_) => Err(DataConversionError::NoValue),
             _ => Err(self.unsupported(DataType::Url)),
         }
@@ -752,11 +857,15 @@ impl DataConvertTo<Url> for DataConverter<'_> {
 
 impl DataConvertTo<serde_json::Value> for DataConverter<'_> {
     /// Converts accepted source values to [`serde_json::Value`].
-    fn convert(&self) -> DataConversionResult<serde_json::Value> {
+    fn convert(&self, options: &DataConversionOptions) -> DataConversionResult<serde_json::Value> {
         match self {
             DataConverter::Json(value) => Ok(value.as_ref().clone()),
-            DataConverter::String(value) => serde_json::from_str(value.as_ref())
-                .map_err(|error| DataConversionError::JsonDeserializationError(error.to_string())),
+            DataConverter::String(value) => {
+                let value = options.string.normalize(value.as_ref())?;
+                serde_json::from_str(&value).map_err(|error| {
+                    DataConversionError::JsonDeserializationError(error.to_string())
+                })
+            }
             DataConverter::StringMap(value) => match serde_json::to_value(value.as_ref()) {
                 Ok(value) => Ok(value),
                 Err(error) => Err(DataConversionError::JsonSerializationError(

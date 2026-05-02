@@ -25,6 +25,7 @@ exclude = [
 [lib]
 name = "qubit_common"
 doctest = true
+test = false
 
 [dependencies]
 bigdecimal = "0.4"

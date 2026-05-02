@@ -20,13 +20,20 @@ pub mod datatype;
 pub mod error;
 
 pub use converter::{
+    BlankStringPolicy,
+    BooleanConversionOptions,
+    CollectionConversionOptions,
     DataConversionError,
+    DataConversionOptions,
     DataConversionResult,
     DataConvertTo,
     DataConverter,
     DataConverters,
     DataListConversionError,
     DataListConversionResult,
+    EmptyItemPolicy,
+    ScalarStringDataConverters,
+    StringConversionOptions,
 };
 pub use datatype::{
     DataType,
