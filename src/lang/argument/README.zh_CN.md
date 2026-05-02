@@ -10,20 +10,22 @@
 
 ```
 argument/
-├── error.rs         ## 错误类型定义
-├── numeric.rs       ## 数值参数验证
-├── string.rs        ## 字符串参数验证
-├── collection.rs    ## 集合参数验证
-├── option.rs        ## Option 参数验证
-├── condition.rs     ## 条件和状态验证
-└── mod.rs          ## 模块入口
+├── argument_error.rs       ## 错误类型定义
+├── numeric_argument.rs     ## 数值参数验证
+├── string_argument.rs      ## 字符串参数验证
+├── collection_argument.rs  ## 集合参数验证
+├── option_argument.rs      ## Option 参数验证
+├── condition.rs            ## 条件和状态验证
+└── mod.rs                  ## 模块入口
 ```
 
 ## 核心特性
 
 ### 1. 数值验证 (`NumericArgument`)
 
-支持所有实现 `PartialOrd + Default + Display + Copy` 的类型。
+支持本 crate 已实现的内置数值类型：有符号整数（`i8`、`i16`、`i32`、
+`i64`、`i128`、`isize`）、无符号整数（`u8`、`u16`、`u32`、`u64`、
+`u128`、`usize`）以及浮点数（`f32`、`f64`）。浮点数验证会拒绝 `NaN`。
 
 ```rust
 use qubit_common::lang::argument::NumericArgument;
@@ -215,18 +217,10 @@ match validate_config(80, 30) {
 4. **清晰错误**：提供友好的错误消息，包含参数名和值
 5. **符合习惯**：遵循 Rust 的设计哲学和最佳实践
 
-## 示例程序
-
-运行示例程序查看完整用法：
-
-```bash
-cargo run --example argument_demo
-```
-
 ## 测试
 
 ```bash
-cargo test --lib lang::argument
+cargo test --test lang_tests lang::argument
 ```
 
 ## 文档

@@ -10,20 +10,23 @@ This module provides argument validation functionality with a design that follow
 
 ```
 argument/
-├── error.rs         ## Error type definitions
-├── numeric.rs       ## Numeric argument validation
-├── string.rs        ## String argument validation
-├── collection.rs    ## Collection argument validation
-├── option.rs        ## Option argument validation
-├── condition.rs     ## Condition and state validation
-└── mod.rs          ## Module entry point
+├── argument_error.rs       ## Error type definitions
+├── numeric_argument.rs     ## Numeric argument validation
+├── string_argument.rs      ## String argument validation
+├── collection_argument.rs  ## Collection argument validation
+├── option_argument.rs      ## Option argument validation
+├── condition.rs            ## Condition and state validation
+└── mod.rs                  ## Module entry point
 ```
 
 ## Core Features
 
 ### 1. Numeric Validation (`NumericArgument`)
 
-Supports all types that implement `PartialOrd + Default + Display + Copy`.
+Supports the built-in numeric types implemented by this crate: signed integers
+(`i8`, `i16`, `i32`, `i64`, `i128`, `isize`), unsigned integers (`u8`, `u16`,
+`u32`, `u64`, `u128`, `usize`), and floats (`f32`, `f64`). Floating-point
+validations reject `NaN`.
 
 ```rust
 use qubit_common::lang::argument::NumericArgument;
@@ -215,18 +218,10 @@ match validate_config(80, 30) {
 4. **Clear Errors**: Provide friendly error messages with parameter names and values
 5. **Idiomatic**: Follow Rust's design philosophy and best practices
 
-## Example Program
-
-Run the example program to see complete usage:
-
-```bash
-cargo run --example argument_demo
-```
-
 ## Testing
 
 ```bash
-cargo test --lib lang::argument
+cargo test --test lang_tests lang::argument
 ```
 
 ## Documentation

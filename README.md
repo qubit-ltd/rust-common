@@ -19,7 +19,7 @@ Qubit Common is designed to provide essential language-level utilities that are 
 - **Universal Data Type Enum**: Comprehensive `DataType` enum supporting all basic Rust types and common third-party types
 - **Compile-time Type Mapping**: `DataTypeOf` trait for compile-time type-to-data-type queries
 - **Serialization Support**: Built-in JSON/YAML serialization for all data types
-- **Data Conversion**: Reusable `DataConverter` for converting runtime values between supported `DataType`-backed Rust types
+- **Data Conversion**: Reusable `DataConverter` and `DataConverters` for converting single runtime values or batches between supported `DataType`-backed Rust types
 
 ### 🛡️ **Argument Validation**
 - **Numeric Validation**: Range checks, equality comparisons, and bounds validation
@@ -68,7 +68,12 @@ assert_eq!(json, "\"float64\"");
 ```rust
 use std::time::Duration;
 
-use qubit_common::lang::converter::{DataConversionResult, DataConverter};
+use qubit_common::lang::converter::{
+    DataConversionResult,
+    DataConverter,
+    DataConverters,
+    DataListConversionResult,
+};
 
 fn read_settings() -> DataConversionResult<(u16, bool, Duration)> {
     let port = DataConverter::from("8080").to::<u16>()?;
@@ -77,11 +82,20 @@ fn read_settings() -> DataConversionResult<(u16, bool, Duration)> {
 
     Ok((port, enabled, timeout))
 }
+
+fn read_ports(values: &[String]) -> DataListConversionResult<Vec<u16>> {
+    DataConverters::from(values).to_vec()
+}
 ```
 
 `DataConverter` is a lightweight source-value wrapper. It accepts borrowed or
 owned inputs through `From` implementations and returns `DataConversionError`
 when a conversion is unsupported, empty, invalid, or out of range.
+
+`DataConverters` applies the same single-value conversion rules to borrowed
+slices, borrowed vectors, owned vectors, or arbitrary iterators. It returns
+converted values in source order and reports the zero-based failing index when
+an element cannot be converted.
 
 ### Argument Validation
 
@@ -119,18 +133,23 @@ fn process_user_input(
 
 ```rust
 use qubit_common::lang::argument::{
-    check_argument, check_state, check_bounds, ArgumentResult
+    check_argument_with_message, check_bounds, check_state_with_message, ArgumentResult
 };
 
-fn process_data(value: i32, items: &[String]) -> ArgumentResult<()> {
+fn process_data(
+    offset: usize,
+    length: usize,
+    total_length: usize,
+    items: &[String],
+) -> ArgumentResult<()> {
     // Basic argument checking
-    check_argument(value > 0, "value must be positive")?;
+    check_argument_with_message(total_length > 0, "total_length must be positive")?;
 
     // State validation
-    check_state(!items.is_empty(), "items cannot be empty")?;
+    check_state_with_message(!items.is_empty(), "items cannot be empty")?;
 
     // Bounds checking
-    check_bounds(value, 1, 100, "value")?;
+    check_bounds(offset, length, total_length)?;
 
     Ok(())
 }
@@ -192,8 +211,11 @@ The [`DataType`](https://docs.rs/qubit-common/latest/qubit_common/lang/enum.Data
 
 ### Data Conversion
 - [`DataConverter`](https://docs.rs/qubit-common/latest/qubit_common/lang/converter/enum.DataConverter.html) - Runtime value conversion wrapper
+- [`DataConverters`](https://docs.rs/qubit-common/latest/qubit_common/lang/converter/struct.DataConverters.html) - Batch runtime value conversion adapter
 - [`DataConversionError`](https://docs.rs/qubit-common/latest/qubit_common/lang/converter/enum.DataConversionError.html) - Error type for unsupported or invalid conversions
 - [`DataConversionResult`](https://docs.rs/qubit-common/latest/qubit_common/lang/converter/type.DataConversionResult.html) - Result alias returned by conversion APIs
+- [`DataListConversionError`](https://docs.rs/qubit-common/latest/qubit_common/lang/converter/struct.DataListConversionError.html) - Error type that includes the failing batch element index
+- [`DataListConversionResult`](https://docs.rs/qubit-common/latest/qubit_common/lang/converter/type.DataListConversionResult.html) - Result alias returned by batch conversion APIs
 
 ### Argument Validation
 - [`NumericArgument`](https://docs.rs/qubit-common/latest/qubit_common/lang/argument/trait.NumericArgument.html) - Numeric validation methods
